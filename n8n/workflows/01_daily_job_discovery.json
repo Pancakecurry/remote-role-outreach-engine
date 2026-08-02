@@ -1,0 +1,47 @@
+{
+  "name": "01_daily_job_discovery",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 17 * * *" }] } },
+      "id": "d4a2ca8e-0001-4000-8000-000000000001",
+      "name": "Daily 5 PM Asia Kolkata",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_INGESTION_URL }}", "sendHeaders": true, "headerParameters": { "parameters": [{ "name": "Authorization", "value": "=Bearer {{ $env.INTERNAL_AUTOMATION_TOKEN }}" }] }, "sendBody": true, "contentType": "json", "jsonBody": "{\"mode\":\"write\"}", "options": { "timeout": 30000 } },
+      "id": "d4a2ca8e-0002-4000-8000-000000000002",
+      "name": "Call internal job ingestion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 300],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": { "jsCode": "return [{ json: { status: 'ingestion complete', sourceCount: $json.sourcesAttempted ?? 0, jobCount: $json.valid ?? 0 } }];" },
+      "id": "d4a2ca8e-0003-4000-8000-000000000003",
+      "name": "Success summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [760, 220]
+    },
+    {
+      "parameters": { "errorMessage": "Internal job ingestion failed" },
+      "id": "d4a2ca8e-0004-4000-8000-000000000004",
+      "name": "Stop and report failure",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [760, 380]
+    }
+  ],
+  "connections": {
+    "Daily 5 PM Asia Kolkata": { "main": [[{ "node": "Call internal job ingestion", "type": "main", "index": 0 }]] },
+    "Call internal job ingestion": { "main": [[{ "node": "Success summary", "type": "main", "index": 0 }], [{ "node": "Stop and report failure", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "pinData": {},
+  "versionId": "d4a2ca8e-0000-4000-8000-000000000000",
+  "meta": { "templateCredsSetupCompleted": false }
+}

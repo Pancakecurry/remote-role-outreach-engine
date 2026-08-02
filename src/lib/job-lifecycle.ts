@@ -1,0 +1,1 @@
+export const missingJobTransition = (runs: number, sourceSucceeded: boolean, reappeared: boolean) => reappeared ? { runs: 0, active: true, closed: false } : !sourceSucceeded ? { runs, active: true, closed: false } : { runs: runs + 1, active: runs + 1 < 3, closed: runs + 1 >= 3 };

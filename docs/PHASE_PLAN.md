@@ -2,7 +2,7 @@
 
 ## Phase 2
 
-Phase 2A established the SSR Auth boundary and RLS-ready repositories. Phase 2B-2 verifies the manually provisioned owner/profile integration, synthetic demo dataset, and manual authenticated QA gate. Phase 2B remains pending until the owner completes the browser QA checklist; Phase 3 must not start first.
+Phase 2 is complete following owner-authenticated browser QA. Phase 3 adds public ATS registry, read-only ingestion, lifecycle, source health, CRM presentation, and an inactive n8n schedule template. Phase 4 eligibility filtering and Gemini assessment remains pending.
 
 1. Foundation and public-contact contracts
 2. Supabase deployment and CRM authentication

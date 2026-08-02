@@ -7,3 +7,5 @@ Create exactly one email/password user in Supabase Dashboard under Authenticatio
 The Gemini diagnostic completed successfully with the configured model and schema-valid synthetic output. Keep `OUTREACH_MODE=dry_run` and `AUTOSEND_ENABLED=false`. Do not start n8n, configure Gmail delivery, enable live fetching, or run demo seed commands until the owner setup is complete.
 
 After setting the owner ID, run `npm run verify:owner`. Only a passing result permits `npm run seed:demo` and `npm run verify:demo`. Then complete [Phase 2B-2 manual QA](./PHASE_2B2_MANUAL_QA.md). Do not begin Phase 3 until that checklist passes.
+
+For Phase 3, run `npm run sources:seed`, `npm run sources:verify`, and `npm run ingest:jobs`. Keep `OUTREACH_MODE=dry_run` and autosend disabled. The future n8n internal route requires `INTERNAL_AUTOMATION_TOKEN` in production-like deployments, but n8n remains inactive. Complete [Phase 3 manual QA](./PHASE_3_MANUAL_QA.md) before Phase 4.

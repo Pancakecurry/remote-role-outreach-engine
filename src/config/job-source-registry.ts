@@ -1,0 +1,8 @@
+import type { JobSourceProvider } from "@/integrations/job-sources";
+export type ManagedSourceCandidate = { provider: JobSourceProvider; companyName: string; companyDomain: string; boardIdentifier: string; providerRegion?: "GLOBAL" | "EU" };
+export const managedSourceCandidates: ManagedSourceCandidate[] = [
+  ["ASHBY", "Supabase", "supabase.com", "supabase"], ["ASHBY", "n8n", "n8n.io", "n8n"], ["ASHBY", "Labhouse", "labhouse.ai", "labhouse"], ["ASHBY", "Credo AI", "credo.ai", "credo.ai"], ["ASHBY", "Deductive", "deductive.ai", "deductive"], ["ASHBY", "Infinity Constellation", "infinityconstellation.com", "infinity-constellation"], ["ASHBY", "Zeely", "zeely.app", "zeely"], ["ASHBY", "AHL SaafAI", "saafai.com", "AHL-SaafAI"], ["ASHBY", "Pragmatike", "pragmatike.com", "pragmatike"],
+  ["LEVER", "Jobgether", "jobgether.com", "jobgether"], ["LEVER", "360Learning", "360learning.com", "360learning"], ["LEVER", "Jeeves", "tryjeeves.com", "tryjeeves"], ["LEVER", "Egen", "egen.ai", "egen"], ["LEVER", "HighLevel", "gohighlevel.com", "gohighlevel"],
+  ["GREENHOUSE", "Coinbase", "coinbase.com", "coinbase"], ["GREENHOUSE", "Clarifai", "clarifai.com", "clarifai"], ["GREENHOUSE", "Kalepa", "kalepa.com", "kalepa"],
+].map(([provider, companyName, companyDomain, boardIdentifier]) => ({ provider: provider as JobSourceProvider, companyName, companyDomain, boardIdentifier }));
+export const publicBoardUrl = (candidate: ManagedSourceCandidate) => candidate.provider === "GREENHOUSE" ? `https://boards.greenhouse.io/${candidate.boardIdentifier}` : candidate.provider === "LEVER" ? `https://jobs.lever.co/${candidate.boardIdentifier}` : `https://jobs.ashbyhq.com/${candidate.boardIdentifier}`;

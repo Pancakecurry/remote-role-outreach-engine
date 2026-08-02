@@ -2,7 +2,7 @@
 
 ## Current phase
 
-Phase 2B-2 prepares the protected CRM for owner-operated authenticated QA. Supabase migration and Auth configuration are manual gates; synthetic demo records may be seeded only after `npm run verify:owner` passes. There is no production automation, Gmail connection, n8n process, live discovery, or outreach sending.
+Phase 3 adds a public ATS registry and read-only Greenhouse, Lever, and Ashby job ingestion. Jobs are normalized into the CRM with lifecycle and source-health tracking. Qualification, contact discovery, Gmail, n8n activation, applications, and outreach remain disabled.
 
 Useful checks: `npm run verify:supabase`, `npm run verify:owner`, `npm run verify:demo`, and `npm run test:smoke`.
 

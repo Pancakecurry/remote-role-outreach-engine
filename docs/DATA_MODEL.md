@@ -7,3 +7,5 @@
 Jobs have owner-scoped dedup hashes. Evidence has an owner/email/source/email uniqueness guard. Sequences are unique by job/email; messages by sequence/kind; Gmail message IDs and integration dedup hashes are unique. RLS restricts exposed records to `auth.uid()` ownership; n8n must populate owner IDs from `APP_OWNER_USER_ID`.
 
 Phase 2B-2 synthetic records use `is_demo=true` wherever a demo marker exists. `system_settings` is owner-scoped rather than demo-scoped and is seeded idempotently with dry-run-only values. Demo evidence and sequences are intentionally blocked from delivery.
+
+Phase 3 extends `job_sources` with provider identity, board identifier, health, and managed-source configuration. `jobs` gain provider identity, normalized content and metadata, first/last observation, lifecycle, URL hashes, and pending qualification state. `job_source_runs` holds sanitized per-source counters; `job_ingestion_locks` prevents overlapping owner runs.

@@ -20,7 +20,14 @@
     "verify:demo": "node --conditions=react-server --import tsx scripts/verify-demo-data.ts",
     "seed:demo": "node --conditions=react-server --import tsx scripts/seed-demo-data.ts",
     "seed:remove": "node --conditions=react-server --import tsx scripts/remove-demo-data.ts",
-    "test:smoke": "node --import tsx scripts/smoke-test.ts"
+    "test:smoke": "node --import tsx scripts/smoke-test.ts",
+    "sources:seed": "node --conditions=react-server --import tsx scripts/seed-job-sources.ts",
+    "sources:verify": "node --conditions=react-server --import tsx scripts/verify-job-sources.ts",
+    "ingest:jobs": "node --conditions=react-server --import tsx scripts/run-job-ingestion.ts",
+    "ingest:jobs:controlled": "node --conditions=react-server --import tsx scripts/run-job-ingestion.ts --one-per-provider",
+    "ingest:jobs:dry-run": "node --conditions=react-server --import tsx scripts/run-job-ingestion.ts --dry-run",
+    "ingest:unlock": "node --conditions=react-server --import tsx scripts/recover-ingestion-lock.ts",
+    "verify:ingestion": "node --conditions=react-server --import tsx scripts/verify-job-ingestion.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
