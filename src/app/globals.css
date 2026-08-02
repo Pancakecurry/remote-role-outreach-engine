@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+:root { --ink: #10251e; --muted: #64736d; --line: #dce8e2; --surface: #f7fbf8; --accent: #176b4d; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }

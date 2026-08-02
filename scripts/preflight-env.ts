@@ -1,0 +1,3 @@
+import { readEnv } from "@/lib/security/env";
+const result = readEnv();
+if (!result.success) { console.error(`ENV_INVALID: ${result.error.issues.map((issue) => issue.path.join(".")).join(", ")}`); process.exitCode = 1; } else { const keys = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SECRET_KEY", "APP_OWNER_USER_ID", "GEMINI_API_KEY", "GEMINI_MODEL", "GMAIL_SENDER_ADDRESS", "N8N_ENCRYPTION_KEY"]; console.log("ENV_OK"); for (const key of keys) console.log(`${key}: ${process.env[key]?.trim() ? "CONFIGURED" : "MISSING"}`); console.log(`OUTREACH_MODE: ${result.data.OUTREACH_MODE}`); console.log(`AUTOSEND_ENABLED: ${result.data.AUTOSEND_ENABLED}`); }

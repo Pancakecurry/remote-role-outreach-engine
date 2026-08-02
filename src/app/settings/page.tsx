@@ -1,0 +1,2 @@
+import { PageShell } from "@/components/layout/page-shell";
+export default function Settings() { return <PageShell title="Settings"><dl className="grid gap-4 sm:grid-cols-2"><div className="rounded-xl border border-[var(--line)] bg-white p-5"><dt className="text-sm text-[var(--muted)]">Timezone</dt><dd className="mt-1 font-semibold">Asia/Kolkata</dd></div><div className="rounded-xl border border-[var(--line)] bg-white p-5"><dt className="text-sm text-[var(--muted)]">Outreach mode</dt><dd className="mt-1 font-semibold">Dry run — disabled</dd></div></dl></PageShell>; }

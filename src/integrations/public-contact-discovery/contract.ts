@@ -1,0 +1,1 @@
+export const publicContactDiscoveryContract = { phase: 1, liveFetching: false, allowedInput: "synthetic local HTML fixtures", prohibited: ["LinkedIn automation", "email pattern inference", "SMTP probing", "data brokers"] } as const;

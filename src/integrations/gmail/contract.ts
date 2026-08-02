@@ -1,0 +1,1 @@
+export const gmailContract = { phase: 1, status: "NOT_CONNECTED", allowsDrafts: false, allowsSending: false, messageIdentity: ["gmailMessageId", "gmailThreadId", "In-Reply-To", "References"], followupDays: [3, 6], recheckBeforeSend: true } as const;

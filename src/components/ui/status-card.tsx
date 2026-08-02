@@ -1,0 +1,1 @@
+export function StatusCard({ label, value, detail }: { label: string; value: string; detail: string }) { return <section className="rounded-xl border border-[var(--line)] bg-white p-5 shadow-sm"><p className="text-sm text-[var(--muted)]">{label}</p><p className="mt-3 text-2xl font-bold">{value}</p><p className="mt-2 text-xs text-[var(--muted)]">{detail}</p></section>; }

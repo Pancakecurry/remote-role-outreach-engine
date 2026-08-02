@@ -1,0 +1,3 @@
+import type { ReactNode } from "react";
+import { Sidebar } from "./sidebar";
+export function PageShell({ title, children }: { title: string; children: ReactNode }) { return <div className="md:flex"><Sidebar /><main className="min-w-0 flex-1 p-6 md:p-10"><div className="mb-8 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-[var(--accent)]">Foundation mode</p><h1 className="mt-1 text-3xl font-bold">{title}</h1></div><span className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800">AUTOSEND DISABLED</span></div>{children}</main></div>; }

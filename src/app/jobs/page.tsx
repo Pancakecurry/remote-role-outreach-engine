@@ -1,0 +1,2 @@
+import { PageShell } from "@/components/layout/page-shell";
+export default function Jobs() { return <PageShell title="Jobs"><section className="rounded-xl border border-dashed border-[var(--line)] bg-white p-8"><h2 className="font-bold">No jobs loaded</h2><p className="mt-2 text-sm text-slate-600">Future eligible roles and official application portals will appear here. Applications are always manual.</p></section></PageShell>; }

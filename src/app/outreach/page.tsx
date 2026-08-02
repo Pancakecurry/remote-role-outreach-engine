@@ -1,0 +1,2 @@
+import { PageShell } from "@/components/layout/page-shell";
+export default function Outreach() { return <PageShell title="Outreach"><section className="rounded-xl border border-[var(--line)] bg-white p-6"><h2 className="font-bold">No sending controls in Phase 1</h2><p className="mt-2 text-sm text-slate-600">Future drafts require verified public evidence, fit checks, suppression checks, and an explicit activation phase.</p></section></PageShell>; }

@@ -1,0 +1,1 @@
+export const systemDefaults = { timezone: "Asia/Kolkata", dailySchedule: "17:00", outreachMode: "dry_run", autosendEnabled: false, dailySendLimit: 2, minFitScore: 75, minFitConfidence: 0.85, minContactConfidence: 0.95, followupIntervalDays: 3, maxFollowups: 2 } as const;
