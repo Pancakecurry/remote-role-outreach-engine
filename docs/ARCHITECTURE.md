@@ -5,3 +5,5 @@ Next.js provides a private CRM. The browser client uses only public Supabase con
 Next 16 `proxy.ts` refreshes Supabase cookies on requests. Protected server routes validate the user again before rendering, so a cookie alone is never trusted. Every CRM row has an owner; future n8n inserts use `APP_OWNER_USER_ID` with the trusted server key.
 
 n8n, Gemini, controlled public extraction, and Gmail remain future components. All fetched content will be untrusted input. Apollo was removed because the architecture uses public evidence rather than paid contact data.
+
+Phase 2B-2 adds read-only owner/profile verification and guarded synthetic seed tooling. Browser reads continue through the authenticated SSR client and RLS; the admin client is limited to named verification and demo scripts. Future n8n automation will propagate `APP_OWNER_USER_ID`, never a browser-supplied owner value.

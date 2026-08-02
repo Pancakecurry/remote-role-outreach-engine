@@ -16,8 +16,11 @@
     "preflight:supabase": "tsx scripts/preflight-supabase.ts",
     "verify:supabase": "tsx scripts/verify-supabase.ts",
     "preflight:dns": "tsx scripts/preflight-dns.ts",
-    "seed:demo": "tsx scripts/seed-demo-data.ts",
-    "seed:remove": "tsx scripts/remove-demo-data.ts"
+    "verify:owner": "node --conditions=react-server --import tsx scripts/verify-owner.ts",
+    "verify:demo": "node --conditions=react-server --import tsx scripts/verify-demo-data.ts",
+    "seed:demo": "node --conditions=react-server --import tsx scripts/seed-demo-data.ts",
+    "seed:remove": "node --conditions=react-server --import tsx scripts/remove-demo-data.ts",
+    "test:smoke": "node --import tsx scripts/smoke-test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

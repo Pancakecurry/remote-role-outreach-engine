@@ -1,5 +1,11 @@
 # Remote Role Outreach Engine
 
+## Current phase
+
+Phase 2B-2 prepares the protected CRM for owner-operated authenticated QA. Supabase migration and Auth configuration are manual gates; synthetic demo records may be seeded only after `npm run verify:owner` passes. There is no production automation, Gmail connection, n8n process, live discovery, or outreach sending.
+
+Useful checks: `npm run verify:supabase`, `npm run verify:owner`, `npm run verify:demo`, and `npm run test:smoke`.
+
 Private, zero-paid-contact-data CRM foundation. Phase 2B-1 deployed the audited Supabase migration through the Supabase CLI and verified the empty, RLS-protected remote foundation. Live discovery, crawling, Gmail, outreach, n8n execution, and production automation remain disabled.
 
 Migration history is now authoritative. The next manual gate is creating the single owner user in Supabase Dashboard; there is no public sign-up flow.

@@ -4,4 +4,4 @@ The audited initial migration was deployed through Supabase CLI. Remote migratio
 
 Run `npm run preflight:supabase` and `npm run verify:supabase` to repeat sanitized checks. The Gemini diagnostic confirmed API reachability, configured-model availability, and schema-valid synthetic output. No project reference, key, password, user ID, or sensitive endpoint parameter is documented here.
 
-Public signup remains disabled. No demo data, Gmail activity, live discovery, n8n workflow, or production automation is active. The next manual gate is creating the single owner account and setting its local owner ID.
+Public signup remains disabled. Phase 2B-2 adds a manual owner/profile verification gate and guarded synthetic demo data. Gmail activity, live discovery, n8n workflow, and production automation remain inactive. Authenticated browser QA must pass before Phase 3.
