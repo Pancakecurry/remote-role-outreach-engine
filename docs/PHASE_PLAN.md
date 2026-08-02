@@ -12,4 +12,4 @@
 10. Controlled live test
 11. Production activation
 
-Phase 1 is complete. Phase 2A (migration audit, auth, protected CRM routes, and data access) is complete in source and awaits manual migration/user setup. Phase 2B remains pending.
+Phase 1 and Phase 2A are complete. Phase 2B-1 deployed and verified the Supabase foundation; Phase 2B-2 (manual owner creation and authenticated CRM verification) remains pending. All later phases remain pending.

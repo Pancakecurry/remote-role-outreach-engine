@@ -14,6 +14,7 @@
     "preflight:env": "tsx scripts/preflight-env.ts",
     "preflight:gemini": "tsx scripts/preflight-gemini.ts",
     "preflight:supabase": "tsx scripts/preflight-supabase.ts",
+    "verify:supabase": "tsx scripts/verify-supabase.ts",
     "preflight:dns": "tsx scripts/preflight-dns.ts",
     "seed:demo": "tsx scripts/seed-demo-data.ts",
     "seed:remove": "tsx scripts/remove-demo-data.ts"

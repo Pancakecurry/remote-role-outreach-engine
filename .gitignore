@@ -7,6 +7,7 @@ out/
 .env.*.local
 !.env.example
 n8n/docker/.env
+supabase/.temp/
 *.log
 coverage/
 playwright-report/
