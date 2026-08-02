@@ -14,14 +14,18 @@
     "preflight:env": "tsx scripts/preflight-env.ts",
     "preflight:gemini": "tsx scripts/preflight-gemini.ts",
     "preflight:supabase": "tsx scripts/preflight-supabase.ts",
-    "preflight:dns": "tsx scripts/preflight-dns.ts"
+    "preflight:dns": "tsx scripts/preflight-dns.ts",
+    "seed:demo": "tsx scripts/seed-demo-data.ts",
+    "seed:remove": "tsx scripts/remove-demo-data.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.57.4",
     "cheerio": "^1.1.2",
     "next": "^16.2.12",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "server-only": "^0.0.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {

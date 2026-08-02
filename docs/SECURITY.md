@@ -1,5 +1,7 @@
 # Security controls
 
-Secrets stay in ignored local environment files; only placeholders are committed. RLS permits authenticated owners only, while server automation uses the secret key and explicit `APP_OWNER_USER_ID`. Future fetching must enforce allowlists, URL parsing, redirects limits, size limits, and SSRF protections. Job pages and prompts are untrusted and must never override system policy.
+Secrets stay in ignored local files. The application agent never opens or prints `.env.local`; runtime preflights report only sanitized statuses. The secret-key client is marked server-only and is not imported by client components or normal CRM repositories.
 
-LinkedIn scraping, guessed-email sending, SMTP probing, paid data brokers, and public anonymous access are prohibited. Suppression, dry-run kill switch, rate limits, deduplication/idempotency, and integration audit events are first-class controls. Auto-send stays disabled until a later controlled activation.
+There is no public sign-up, social auth, reset flow, anonymous CRM access, or browser secret-key use. Protected routes use validated Supabase users, generic authentication failures, cookie refresh through `proxy.ts`, and RLS owner policies. Repository failures are sanitized before rendering.
+
+Future fetching must enforce allowlists, redirect/size limits, and SSRF protections. LinkedIn scraping, guessed-email sending, SMTP probing, paid data brokers, and Gmail operations remain prohibited. Suppression, dry-run kill switch, rate limits, idempotency, and audit logs remain mandatory.

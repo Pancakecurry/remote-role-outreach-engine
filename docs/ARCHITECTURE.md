@@ -1,5 +1,7 @@
 # Architecture
 
-Next.js provides the private CRM shell. Supabase is the future source of truth with Auth/RLS ownership. n8n will orchestrate future scheduled operations; Gemini will return structured assessments and drafts; controlled public HTML extraction will produce evidence; Gmail will deliver and synchronize threads only in later phases.
+Next.js provides a private CRM. The browser client uses only public Supabase configuration. The SSR client uses the publishable key plus Supabase Auth cookies, validates the user with `auth.getUser()`, and lets RLS decide all normal CRM reads/writes. The server-only admin client holds the secret key exclusively for named scripts and future trusted n8n automation; it is not used by CRM pages.
 
-All future external pages and job descriptions are untrusted input. Evidence, assessment, delivery, and suppression remain separate records. Browser clients never receive secret keys. Apollo was removed because it is a paid contact-data dependency and is not needed for this public-evidence-first architecture.
+Next 16 `proxy.ts` refreshes Supabase cookies on requests. Protected server routes validate the user again before rendering, so a cookie alone is never trusted. Every CRM row has an owner; future n8n inserts use `APP_OWNER_USER_ID` with the trusted server key.
+
+n8n, Gemini, controlled public extraction, and Gmail remain future components. All fetched content will be untrusted input. Apollo was removed because the architecture uses public evidence rather than paid contact data.

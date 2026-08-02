@@ -1,9 +1,11 @@
 # Remote Role Outreach Engine
 
-Private, zero-paid-contact-data foundation for structured remote-role outreach. Phase 1 is intentionally dry-run and offline: it has no live discovery, website crawling, email sending, Gmail drafts, or production n8n workflows.
+Private, zero-paid-contact-data CRM foundation. Phase 2A adds server-side Supabase authentication, RLS-governed repositories, protected CRM routes, and safe data-setup states. Live discovery, crawling, Gmail, outreach, n8n execution, and production automation remain disabled.
+
+Create the Supabase migration and the single owner user manually before using CRM data. There is no public sign-up flow.
 
 ## Commands
 
-`npm run lint` · `npm run typecheck` · `npm test` · `npm run build` · `npm run preflight` · `npm run test:contact-extraction`
+`npm run lint` · `npm run typecheck` · `npm test` · `npm run build` · `npm run preflight` · `npm run seed:demo` · `npm run seed:remove`
 
-See [docs/PROJECT_SPEC.md](docs/PROJECT_SPEC.md), [docs/SECURITY.md](docs/SECURITY.md), and [docs/MANUAL_SETUP.md](docs/MANUAL_SETUP.md).
+The demo scripts are dry-run guarded and must not be used until the migration is applied and `APP_OWNER_USER_ID` is configured. See [docs/MANUAL_SETUP.md](docs/MANUAL_SETUP.md) and [docs/PHASE_2A_ACCEPTANCE.md](docs/PHASE_2A_ACCEPTANCE.md).

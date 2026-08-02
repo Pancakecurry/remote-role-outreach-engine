@@ -12,4 +12,4 @@
 10. Controlled live test
 11. Production activation
 
-Only Phase 1 is implemented in this repository state.
+Phase 1 is complete. Phase 2A (migration audit, auth, protected CRM routes, and data access) is complete in source and awaits manual migration/user setup. Phase 2B remains pending.
