@@ -27,7 +27,9 @@
     "ingest:jobs:controlled": "node --conditions=react-server --import tsx scripts/run-job-ingestion.ts --one-per-provider",
     "ingest:jobs:dry-run": "node --conditions=react-server --import tsx scripts/run-job-ingestion.ts --dry-run",
     "ingest:unlock": "node --conditions=react-server --import tsx scripts/recover-ingestion-lock.ts",
-    "verify:ingestion": "node --conditions=react-server --import tsx scripts/verify-job-ingestion.ts"
+    "verify:ingestion": "node --conditions=react-server --import tsx scripts/verify-job-ingestion.ts",
+    "pipeline:run": "node --conditions=react-server --import tsx scripts/run-release-pipeline.ts",
+    "verify:release-candidate": "node --conditions=react-server --import tsx scripts/verify-release-candidate.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

@@ -1,0 +1,5 @@
+import { loadProjectEnvironment } from "@/lib/security/load-project-env";
+import { qualifyAndRank, discoverContacts, generateDrafts } from "@/services/release-pipeline";
+import { z } from "zod";
+async function main() { loadProjectEnvironment(); const owner = z.string().uuid().safeParse(process.env.APP_OWNER_USER_ID); if (!owner.success) { console.log("PIPELINE: NOT_CONFIGURED"); process.exitCode = 1; return; } try { const qualification = await qualifyAndRank(owner.data); const contacts = await discoverContacts(owner.data); const drafts = await generateDrafts(owner.data); const output = { ...qualification, companies: contacts.companies, pages: contacts.pages, candidates: contacts.candidates, eligible: contacts.eligible, manual: contacts.manual, contactRejected: contacts.contactRejected, drafts: drafts.drafts, draftBlocked: drafts.draftBlocked }; for (const [key, value] of Object.entries(output)) console.log(`PIPELINE_${key.toUpperCase()}: ${value}`); } catch { console.log("PIPELINE: FAILED"); process.exitCode = 1; } }
+void main();
