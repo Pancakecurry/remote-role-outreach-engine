@@ -29,7 +29,9 @@
     "ingest:unlock": "node --conditions=react-server --import tsx scripts/recover-ingestion-lock.ts",
     "verify:ingestion": "node --conditions=react-server --import tsx scripts/verify-job-ingestion.ts",
     "pipeline:run": "node --conditions=react-server --import tsx scripts/run-release-pipeline.ts",
-    "verify:release-candidate": "node --conditions=react-server --import tsx scripts/verify-release-candidate.ts"
+    "pipeline:rerank": "node --conditions=react-server --import tsx scripts/rerank-application-queue.ts",
+    "verify:release-candidate": "node --conditions=react-server --import tsx scripts/verify-release-candidate.ts",
+    "diagnose:qualification": "node --conditions=react-server --import tsx scripts/diagnose-qualification.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
