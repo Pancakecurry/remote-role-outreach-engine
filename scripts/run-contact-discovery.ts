@@ -1,0 +1,5 @@
+import { discoverContacts, generateDrafts } from "@/services/release-pipeline";
+import { loadProjectEnvironment } from "@/lib/security/load-project-env";
+import { z } from "zod";
+async function main() { loadProjectEnvironment(); const owner = z.string().uuid().safeParse(process.env.APP_OWNER_USER_ID); if (!owner.success) { console.log("CONTACT_DISCOVERY: NOT_CONFIGURED"); process.exitCode = 1; return; } try { const contacts = await discoverContacts(owner.data, 10); const drafts = await generateDrafts(owner.data); console.log(`CONTACT_DISCOVERY_COMPANIES: ${contacts.companies}`); console.log(`CONTACT_DISCOVERY_PAGES: ${contacts.pages}`); console.log(`CONTACT_DISCOVERY_CANDIDATES: ${contacts.candidates}`); console.log(`CONTACT_DISCOVERY_ELIGIBLE: ${contacts.eligible}`); console.log(`CONTACT_DISCOVERY_MANUAL: ${contacts.manual}`); console.log(`CONTACT_DISCOVERY_REJECTED: ${contacts.contactRejected}`); console.log(`OUTREACH_DRAFTS: ${drafts.drafts}`); console.log(`OUTREACH_BLOCKED: ${drafts.draftBlocked}`); } catch { console.log("CONTACT_DISCOVERY: FAILED"); process.exitCode = 1; } }
+void main();

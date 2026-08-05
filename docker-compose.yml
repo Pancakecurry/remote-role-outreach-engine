@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - HOSTNAME=0.0.0.0
+      - TZ=Asia/Kolkata
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -T 5 -O /dev/null http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+  n8n:
+    image: n8nio/n8n:2.32.7
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - GENERIC_TIMEZONE=Asia/Kolkata
+      - TZ=Asia/Kolkata
+      - INTERNAL_API_BASE_URL=http://app:3000
+    volumes:
+      - n8n_data:/home/node/.n8n
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:5678/healthz"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+volumes:
+  n8n_data:
+    external: true
+    name: docker_n8n_data

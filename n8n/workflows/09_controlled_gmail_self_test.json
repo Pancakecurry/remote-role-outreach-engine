@@ -1,0 +1,23 @@
+{
+  "name": "09_controlled_gmail_self_test",
+  "active": false,
+  "nodes": [
+    { "parameters": {}, "id": "09-trigger", "name": "Manual self-test trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [220, 300] },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/outreach/self-test-prepare", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "sendBody": true, "contentType": "json", "jsonBody": "{\"is_test\":true,\"recipient\":\"={{ $env.SELF_TEST_RECIPIENT }}\"}" }, "id": "09-prepare", "name": "Prepare isolated self-test", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [440, 300], "onError": "continueErrorOutput" },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/outreach/self-test-claim", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "sendBody": true, "contentType": "json", "jsonBody": "{\"is_test\":true,\"recipient\":\"={{ $env.SELF_TEST_RECIPIENT }}\",\"batchSize\":1}" }, "id": "09-claim", "name": "Claim one isolated self-test", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [660, 250], "onError": "continueErrorOutput" },
+    { "parameters": { "conditions": { "options": { "caseSensitive": true }, "conditions": [{ "leftValue": "={{ $json.claimed }}", "rightValue": 1, "operator": { "type": "number", "operation": "equals" } }] } }, "id": "09-only-one", "name": "Exactly one test claimed", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [880, 220] },
+    { "parameters": { "resource": "message", "operation": "send", "sendTo": "={{ $json.messages[0].recipient }}", "subject": "={{ $json.messages[0].subject }}", "emailType": "text", "message": "={{ $json.messages[0].bodyText }}" }, "id": "09-gmail", "name": "Send one isolated self-test", "type": "n8n-nodes-base.gmail", "typeVersion": 2.1, "position": [1100, 180], "notes": "Owner assigns Gmail Outreach — Dedicated in the n8n UI. This node is never executed by Codex." },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/outreach/self-test-event", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "sendBody": true, "contentType": "json", "jsonBody": "={{ { id: $node['Claim one isolated self-test'].json.messages[0].id, claimToken: $node['Claim one isolated self-test'].json.messages[0].claimToken, event: 'SENT', gmailMessageId: $json.id, gmailThreadId: $json.threadId } }}" }, "id": "09-sent", "name": "Record sanitized self-test send", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [1320, 180], "onError": "continueErrorOutput" },
+    { "parameters": { "errorMessage": "Self-test guard rejected, no record was claimed, or a required owner credential is unassigned" }, "id": "09-stop", "name": "Stop safely", "type": "n8n-nodes-base.stopAndError", "typeVersion": 1, "position": [1100, 420] }
+  ],
+  "connections": {
+    "Manual self-test trigger": { "main": [[{ "node": "Prepare isolated self-test", "type": "main", "index": 0 }]] },
+    "Prepare isolated self-test": { "main": [[{ "node": "Claim one isolated self-test", "type": "main", "index": 0 }], [{ "node": "Stop safely", "type": "main", "index": 0 }]] },
+    "Claim one isolated self-test": { "main": [[{ "node": "Exactly one test claimed", "type": "main", "index": 0 }], [{ "node": "Stop safely", "type": "main", "index": 0 }]] },
+    "Exactly one test claimed": { "main": [[{ "node": "Send one isolated self-test", "type": "main", "index": 0 }], [{ "node": "Stop safely", "type": "main", "index": 0 }]] },
+    "Send one isolated self-test": { "main": [[{ "node": "Record sanitized self-test send", "type": "main", "index": 0 }]] },
+    "Record sanitized self-test send": { "main": [[{ "node": "Stop safely", "type": "main", "index": 0 }], [{ "node": "Stop safely", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "meta": { "templateCredsSetupCompleted": false, "requires": "Manual trigger only. Assign a Header Auth credential and Gmail Outreach — Dedicated in the n8n UI. Keep inactive until separately authorized." }
+}

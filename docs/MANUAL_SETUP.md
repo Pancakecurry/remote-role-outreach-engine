@@ -9,3 +9,5 @@ The Gemini diagnostic completed successfully with the configured model and schem
 After setting the owner ID, run `npm run verify:owner`. Only a passing result permits `npm run seed:demo` and `npm run verify:demo`. Then complete [Phase 2B-2 manual QA](./PHASE_2B2_MANUAL_QA.md). Do not begin Phase 3 until that checklist passes.
 
 For Phase 3, run `npm run sources:seed`, `npm run sources:verify`, and `npm run ingest:jobs`. Keep `OUTREACH_MODE=dry_run` and autosend disabled. The future n8n internal route requires `INTERNAL_AUTOMATION_TOKEN` in production-like deployments, but n8n remains inactive. Complete [Phase 3 manual QA](./PHASE_3_MANUAL_QA.md) before Phase 4.
+
+For the local release candidate, start `docker compose up -d --build`, then run `npm run verify:stack` and `npm run verify:production-readiness`. Import the inactive workflow JSON only after creating a Header Auth credential with header name `x-internal-automation-token`; do not place its value in workflow JSON. See [the controlled integration gate](./TURN_A_MANUAL_INTEGRATION.md). Gmail remains off-limits until a separately authorized self-test.

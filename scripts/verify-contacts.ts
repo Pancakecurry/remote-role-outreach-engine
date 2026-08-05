@@ -1,0 +1,6 @@
+import { loadProjectEnvironment } from "@/lib/security/load-project-env";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { z } from "zod";
+const deadline = setTimeout(() => { console.log("CONTACTS_VERIFY: TIMEOUT"); process.exit(1); }, 15_000);
+async function main() { loadProjectEnvironment(); const owner = z.string().uuid().safeParse(process.env.APP_OWNER_USER_ID); if (!owner.success) { console.log("CONTACTS_VERIFY: NOT_CONFIGURED"); process.exitCode = 1; return; } const db = createAdminSupabaseClient(); const { data, error } = await db.from("contact_evidence").select("autosend_eligible,domain_matches,mx_status,source_type,email_domain,public_explicit,source_url").eq("owner_id", owner.data).eq("is_demo", false); if (error) { console.log("CONTACTS_VERIFY: FAIL"); process.exitCode = 1; return; } const safe = (data ?? []).every((row) => !row.autosend_eligible || (row.public_explicit && row.domain_matches && row.mx_status === "PRESENT" && row.source_url.startsWith("https://") && row.source_type !== "INFERRED_EMAIL_PATTERN" && !/@(gmail|yahoo|outlook|hotmail)\.com$/i.test(`@${row.email_domain}`))); console.log(`CONTACTS_AUTOSEND_GATES: ${safe ? "PASS" : "FAIL"}`); if (!safe) process.exitCode = 1; }
+void main().finally(() => clearTimeout(deadline));

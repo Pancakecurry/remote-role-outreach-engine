@@ -2,46 +2,23 @@
   "name": "01_daily_job_discovery",
   "active": false,
   "nodes": [
-    {
-      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 17 * * *" }] } },
-      "id": "d4a2ca8e-0001-4000-8000-000000000001",
-      "name": "Daily 5 PM Asia Kolkata",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [260, 300]
-    },
-    {
-      "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/jobs/ingest", "sendHeaders": true, "headerParameters": { "parameters": [{ "name": "x-internal-automation-token", "value": "={{ $env.INTERNAL_AUTOMATION_TOKEN }}" }] }, "sendBody": true, "contentType": "json", "jsonBody": "{\"mode\":\"write\"}", "options": { "timeout": 30000 } },
-      "id": "d4a2ca8e-0002-4000-8000-000000000002",
-      "name": "Call internal job ingestion",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [500, 300],
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": { "jsCode": "return [{ json: { status: 'ingestion complete', sourceCount: $json.sourcesAttempted ?? 0, jobCount: $json.valid ?? 0 } }];" },
-      "id": "d4a2ca8e-0003-4000-8000-000000000003",
-      "name": "Success summary",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [760, 220]
-    },
-    {
-      "parameters": { "errorMessage": "Internal job ingestion failed" },
-      "id": "d4a2ca8e-0004-4000-8000-000000000004",
-      "name": "Stop and report failure",
-      "type": "n8n-nodes-base.stopAndError",
-      "typeVersion": 1,
-      "position": [760, 380]
-    }
+    { "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 17 * * *" }] } }, "id": "01-trigger", "name": "Daily 5 PM Asia Kolkata", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [220, 300] },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/jobs/ingest", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "sendBody": true, "contentType": "json", "jsonBody": "{\"mode\":\"write\"}", "options": { "timeout": 30000 } }, "id": "01-ingest", "name": "Ingest public ATS jobs", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [460, 300], "onError": "continueErrorOutput" },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/pipeline/qualify", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "options": { "timeout": 120000 } }, "id": "01-qualify", "name": "Qualify after ingestion", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [700, 220], "onError": "continueErrorOutput" },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/pipeline/contacts", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "options": { "timeout": 120000 } }, "id": "01-contacts", "name": "Discover public contacts", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [940, 180], "onError": "continueErrorOutput" },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/pipeline/drafts", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "options": { "timeout": 120000 } }, "id": "01-drafts", "name": "Generate safe drafts", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [1180, 140], "onError": "continueErrorOutput" },
+    { "parameters": { "jsCode": "return [{ json: { status: 'pipeline complete', dryRun: true } }];" }, "id": "01-summary", "name": "Dry-run summary", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [1420, 140] },
+    { "parameters": { "errorMessage": "Pipeline stage failed; later stages were stopped" }, "id": "01-stop", "name": "Stop on prior-stage failure", "type": "n8n-nodes-base.stopAndError", "typeVersion": 1, "position": [700, 430] }
   ],
   "connections": {
-    "Daily 5 PM Asia Kolkata": { "main": [[{ "node": "Call internal job ingestion", "type": "main", "index": 0 }]] },
-    "Call internal job ingestion": { "main": [[{ "node": "Success summary", "type": "main", "index": 0 }], [{ "node": "Stop and report failure", "type": "main", "index": 0 }]] }
+    "Daily 5 PM Asia Kolkata": { "main": [[{ "node": "Ingest public ATS jobs", "type": "main", "index": 0 }]] },
+    "Ingest public ATS jobs": { "main": [[{ "node": "Qualify after ingestion", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] },
+    "Qualify after ingestion": { "main": [[{ "node": "Discover public contacts", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] },
+    "Discover public contacts": { "main": [[{ "node": "Generate safe drafts", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] },
+    "Generate safe drafts": { "main": [[{ "node": "Dry-run summary", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
   "pinData": {},
-  "versionId": "d4a2ca8e-0000-4000-8000-000000000000",
-  "meta": { "templateCredsSetupCompleted": false }
+  "versionId": "01-release-candidate-v2",
+  "meta": { "templateCredsSetupCompleted": false, "requires": "Assign an n8n Header Auth credential manually; imports remain inactive." }
 }

@@ -9,3 +9,5 @@ Jobs have owner-scoped dedup hashes. Evidence has an owner/email/source/email un
 Phase 2B-2 synthetic records use `is_demo=true` wherever a demo marker exists. `system_settings` is owner-scoped rather than demo-scoped and is seeded idempotently with dry-run-only values. Demo evidence and sequences are intentionally blocked from delivery.
 
 Phase 3 extends `job_sources` with provider identity, board identifier, health, and managed-source configuration. `jobs` gain provider identity, normalized content and metadata, first/last observation, lifecycle, URL hashes, and pending qualification state. `job_source_runs` holds sanitized per-source counters; `job_ingestion_locks` prevents overlapping owner runs.
+
+Migration `004_operational_pipeline_foundation.sql` adds bounded assessment attempts, retry metadata, application history, and owner-scoped pipeline locks. Existing `jobs`, contact evidence, sequences, and messages carry deterministic and Gemini assessments, public-evidence state, draft-validation facts, idempotency keys, and paused dry-run lifecycle state.

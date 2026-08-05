@@ -16,4 +16,4 @@ Phase 2 is complete following owner-authenticated browser QA. Phase 3 adds publi
 10. Controlled live test
 11. Production activation
 
-Phase 1 and Phase 2A are complete. Phase 2B-1 deployed and verified the Supabase foundation; Phase 2B-2 (manual owner creation and authenticated CRM verification) remains pending. All later phases remain pending.
+Phase 1–3 are complete. The release candidate implements the foundations for phases 4–7 while retaining manual application and dry-run-only delivery. The next gate is owner-operated controlled self-test validation; production activation remains pending.
