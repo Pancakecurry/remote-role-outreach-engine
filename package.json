@@ -29,6 +29,7 @@
     "ingest:unlock": "node --conditions=react-server --import tsx scripts/recover-ingestion-lock.ts",
     "verify:ingestion": "node --conditions=react-server --import tsx scripts/verify-job-ingestion.ts",
     "pipeline:run": "node --conditions=react-server --import tsx scripts/run-release-pipeline.ts",
+    "pipeline:master": "node --conditions=react-server --import tsx scripts/run-daily-acquisition.ts",
     "pipeline:rerank": "node --conditions=react-server --import tsx scripts/rerank-application-queue.ts",
     "pipeline:qualify": "node --conditions=react-server --import tsx scripts/run-qualification.ts",
     "pipeline:qualify:dry-run": "node --conditions=react-server --import tsx scripts/run-qualification.ts --dry-run",
@@ -48,6 +49,7 @@
     "verify:outreach": "node --conditions=react-server --import tsx scripts/verify-outreach.ts",
     "verify:self-test": "node --conditions=react-server --import tsx scripts/verify-self-test.ts",
     "verify:production-readiness": "tsx scripts/verify-production-readiness.ts",
+    "verify:end-to-end": "node --conditions=react-server --import tsx scripts/verify-end-to-end.ts",
     "verify:release-candidate": "node --conditions=react-server --import tsx scripts/verify-release-candidate.ts",
     "diagnose:qualification": "node --conditions=react-server --import tsx scripts/diagnose-qualification.ts"
   },

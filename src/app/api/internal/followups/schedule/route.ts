@@ -1,2 +1,2 @@
-import { NextResponse } from "next/server"; import { authorizeInternal } from "@/lib/internal-route";
-export const runtime = "nodejs"; export async function POST(request: Request) { const denied = authorizeInternal(request); if (denied) return denied; return NextResponse.json({ due: 0, claimable: 0, reason: "DRY_RUN_AUTOSEND_DISABLED" }); }
+import { NextResponse } from "next/server"; import { z } from "zod"; import { authorizeInternal } from "@/lib/internal-route"; import { scheduleDueFollowups } from "@/services/outreach-queue";
+export const runtime = "nodejs"; export async function POST(request: Request) { const denied = authorizeInternal(request); if (denied) return denied; const owner = z.string().uuid().safeParse(process.env.APP_OWNER_USER_ID); if (!owner.success) return NextResponse.json({ error: "NOT_CONFIGURED" }, { status: 503 }); return NextResponse.json(await scheduleDueFollowups(owner.data)); }

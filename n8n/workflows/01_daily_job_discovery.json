@@ -2,7 +2,7 @@
   "name": "01_daily_job_discovery",
   "active": false,
   "nodes": [
-    { "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 17 * * *" }] } }, "id": "01-trigger", "name": "Daily 5 PM Asia Kolkata", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [220, 300] },
+    { "parameters": {}, "id": "01-trigger", "name": "Manual modular pipeline trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [220, 300] },
     { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/jobs/ingest", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "sendBody": true, "contentType": "json", "jsonBody": "{\"mode\":\"write\"}", "options": { "timeout": 30000 } }, "id": "01-ingest", "name": "Ingest public ATS jobs", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [460, 300], "onError": "continueErrorOutput" },
     { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/pipeline/qualify", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "options": { "timeout": 120000 } }, "id": "01-qualify", "name": "Qualify after ingestion", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [700, 220], "onError": "continueErrorOutput" },
     { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/pipeline/contacts", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "options": { "timeout": 120000 } }, "id": "01-contacts", "name": "Discover public contacts", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [940, 180], "onError": "continueErrorOutput" },
@@ -11,7 +11,7 @@
     { "parameters": { "errorMessage": "Pipeline stage failed; later stages were stopped" }, "id": "01-stop", "name": "Stop on prior-stage failure", "type": "n8n-nodes-base.stopAndError", "typeVersion": 1, "position": [700, 430] }
   ],
   "connections": {
-    "Daily 5 PM Asia Kolkata": { "main": [[{ "node": "Ingest public ATS jobs", "type": "main", "index": 0 }]] },
+    "Manual modular pipeline trigger": { "main": [[{ "node": "Ingest public ATS jobs", "type": "main", "index": 0 }]] },
     "Ingest public ATS jobs": { "main": [[{ "node": "Qualify after ingestion", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] },
     "Qualify after ingestion": { "main": [[{ "node": "Discover public contacts", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] },
     "Discover public contacts": { "main": [[{ "node": "Generate safe drafts", "type": "main", "index": 0 }], [{ "node": "Stop on prior-stage failure", "type": "main", "index": 0 }]] },
@@ -19,6 +19,6 @@
   },
   "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
   "pinData": {},
-  "versionId": "01-release-candidate-v2",
-  "meta": { "templateCredsSetupCompleted": false, "requires": "Assign an n8n Header Auth credential manually; imports remain inactive." }
+  "versionId": "01-modular-fallback-v3",
+  "meta": { "templateCredsSetupCompleted": false, "requires": "Manual fallback only. 00_remote_role_acquisition_master is the sole 5 PM entry point." }
 }

@@ -1,0 +1,13 @@
+{
+  "name": "00_remote_role_acquisition_master",
+  "active": false,
+  "nodes": [
+    { "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 17 * * *" }] } }, "id": "00-schedule", "name": "Daily 5 PM Asia Kolkata", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [240, 300] },
+    { "parameters": { "method": "POST", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/pipeline/master", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth", "options": { "timeout": 300000 } }, "id": "00-run", "name": "Run acquisition stages", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [500, 300], "onError": "continueErrorOutput", "notes": "Application owns ingestion, qualification, ranking, contacts, drafts, run state, and failure isolation. Gmail remains independently scheduled by 05–07." },
+    { "parameters": { "method": "GET", "url": "={{ $env.INTERNAL_API_BASE_URL }}/api/internal/operations/status", "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth" }, "id": "00-status", "name": "Record operation status", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [760, 220] },
+    { "parameters": { "errorMessage": "Acquisition stage failed; prior successful records remain intact and dependent stages stopped." }, "id": "00-stop", "name": "Stop safely", "type": "n8n-nodes-base.stopAndError", "typeVersion": 1, "position": [760, 420] }
+  ],
+  "connections": { "Daily 5 PM Asia Kolkata": { "main": [[{ "node": "Run acquisition stages", "type": "main", "index": 0 }]] }, "Run acquisition stages": { "main": [[{ "node": "Record operation status", "type": "main", "index": 0 }], [{ "node": "Stop safely", "type": "main", "index": 0 }]] } },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "meta": { "templateCredsSetupCompleted": false, "requires": "Assign the shared Header Auth credential with X-Internal-Automation-Token. Keep inactive until owner activation." }
+}

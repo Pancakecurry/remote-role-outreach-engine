@@ -29,13 +29,16 @@ const failureFrom = (status?: number, message?: string): AssessmentFailureCatego
   if (message?.includes("SCHEMA")) return "SCHEMA_VALIDATION";
   return "UNKNOWN";
 };
-const shouldAssess = (job: Job, incremental: boolean) => {
+const shouldAssess = (job: Job, mode: "incremental" | "backfill") => {
   const versionChanged = job.assessment_prompt_version !== ASSESSMENT_PROMPT_VERSION || job.assessment_schema_version !== ASSESSMENT_SCHEMA_VERSION || job.candidate_profile_version !== CANDIDATE_PROFILE_VERSION || job.assessment_content_hash !== contentHash(job);
   if (job.gemini_assessment_status === "ASSESSED" && !versionChanged) return false;
   if (job.assessment_terminal) return false;
   if (job.assessment_attempt_count >= 2 && !versionChanged) return false;
   if (job.assessment_next_retry_at && new Date(job.assessment_next_retry_at) > now()) return false;
-  return !incremental || job.gemini_assessment_status !== "ASSESSED" || versionChanged;
+  if (mode === "backfill") return true;
+  const fresh = job.first_seen_at ? Date.now() - Date.parse(job.first_seen_at) <= 48 * 60 * 60 * 1000 : false;
+  const retryDue = job.gemini_assessment_status === "FAILED" && (!job.assessment_next_retry_at || new Date(job.assessment_next_retry_at) <= now());
+  return versionChanged || retryDue || (job.gemini_assessment_status === "PENDING" && job.assessment_attempt_count === 0 && fresh);
 };
 async function assess(job: Job) {
   if ((job.description_text ?? "").trim().length < 80) throw Object.assign(new Error("DESCRIPTION_TOO_SHORT"), { category: "DESCRIPTION_TOO_SHORT" as AssessmentFailureCategory });
@@ -64,8 +67,13 @@ export async function runAssessmentPipeline(ownerId: string, options: { mode: "i
     if (jobs.error) throw new Error("ASSESSMENT_READ_FAILED");
     const plausible: Job[] = [];
     for (const job of (jobs.data ?? []) as Job[]) { const deterministic = deterministicEligibility(job); if (!options.dryRun) await db.from("jobs").update({ deterministic_status: deterministic.status, deterministic_score: deterministic.score, deterministic_reasons: deterministic.reasons, remote_eligibility: deterministic.remoteEligibility }).eq("owner_id", ownerId).eq("id", job.id); if (deterministic.status !== "REJECTED") plausible.push(job); }
-    for (const job of plausible) if (job.gemini_assessment_status === "ASSESSED" && !shouldAssess(job, options.mode === "incremental")) stats.reused += 1;
-    const candidates = plausible.filter((job) => shouldAssess(job, options.mode === "incremental")).sort((a, b) => (a.gemini_assessment_status === "FAILED" ? -1 : 1) - (b.gemini_assessment_status === "FAILED" ? -1 : 1)).slice(0, Math.min(options.limit ?? (options.mode === "backfill" ? 100 : 25), 100));
+    for (const job of plausible) if (job.gemini_assessment_status === "ASSESSED" && !shouldAssess(job, options.mode)) stats.reused += 1;
+    const candidates = plausible.filter((job) => shouldAssess(job, options.mode)).sort((a, b) => {
+      const retry = Number(b.gemini_assessment_status === "FAILED") - Number(a.gemini_assessment_status === "FAILED");
+      if (retry) return retry;
+      const score = (deterministicEligibility(b).score - deterministicEligibility(a).score);
+      return score || Date.parse(b.first_seen_at ?? "1970-01-01") - Date.parse(a.first_seen_at ?? "1970-01-01");
+    }).slice(0, Math.min(options.limit ?? (options.mode === "backfill" ? 50 : 25), options.mode === "backfill" ? 50 : 100));
     await withLimit(candidates, 2, async (job) => {
       const retry = job.gemini_assessment_status === "FAILED"; if (retry) stats.retried += 1; else stats.newAssessments += 1;
       const attemptNumber = Math.min(2, job.assessment_attempt_count + 1); const startedAt = now().toISOString();
