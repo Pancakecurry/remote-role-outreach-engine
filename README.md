@@ -2,7 +2,7 @@
 
 ## Current phase
 
-The release candidate now has one operator-facing 5:00 PM Asia/Kolkata entry point: `00_remote_role_acquisition_master`. It records ingestion → incremental qualification → ranking → bounded contact discovery → gated drafts as one restart-safe application run. Workflows 05–08 remain separate safety components for delivery polling, inbox events, due follow-ups, and operations. Applications remain manual; delivery remains disabled in dry-run mode.
+The release candidate now has one canonical n8n workflow: `Remote Role Acquisition Engine`. Its inactive visual canvas contains separate 5:00 PM acquisition, 15-minute delivery, 15-minute inbox, hourly follow-up, hourly operations, and manual isolated self-test triggers. Applications remain manual; delivery remains disabled in dry-run mode.
 
 Useful checks: `npm run verify:supabase`, `npm run verify:owner`, `npm run verify:demo`, and `npm run test:smoke`.
 
@@ -12,6 +12,6 @@ Migration history is authoritative and the single owner account is already provi
 
 ## Commands
 
-`npm run stack:start` · `npm run stack:verify` · `npm run pipeline:qualify` · `npm run pipeline:backfill -- --limit=50` · `npm run pipeline:contacts` · `npm run verify:end-to-end` · `npm run verify:production-readiness` · `npm run lint` · `npm run typecheck` · `npm test` · `npm run build`
+`npm run stack:start` · `npm run stack:verify` · `npm run pipeline:qualify` · `npm run pipeline:backfill -- --limit=50` · `npm run pipeline:contacts` · `npm run verify:unified-n8n` · `npm run verify:end-to-end` · `npm run lint` · `npm run typecheck` · `npm test` · `npm run build`
 
 The demo scripts are dry-run guarded and must not be used until the migration is applied and `APP_OWNER_USER_ID` is configured. See [docs/MANUAL_SETUP.md](docs/MANUAL_SETUP.md) and [docs/PHASE_2A_ACCEPTANCE.md](docs/PHASE_2A_ACCEPTANCE.md).

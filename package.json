@@ -44,6 +44,7 @@
     "stack:verify": "tsx scripts/verify-stack.ts",
     "verify:stack": "tsx scripts/verify-stack.ts",
     "verify:n8n-workflows": "tsx scripts/verify-n8n-workflows.ts",
+    "verify:unified-n8n": "tsx scripts/verify-unified-n8n.ts",
     "verify:qualification": "node --conditions=react-server --import tsx scripts/verify-qualification.ts",
     "verify:contacts": "node --conditions=react-server --import tsx scripts/verify-contacts.ts",
     "verify:outreach": "node --conditions=react-server --import tsx scripts/verify-outreach.ts",

@@ -40,16 +40,18 @@ describe("profile and inactive workflow safety", () => {
   it("keeps all n8n workflow templates inactive and credential-free", async () => {
     const directory = join(process.cwd(), "n8n", "workflows");
     const files = (await readdir(directory)).filter((file) => file.endsWith(".json"));
-    expect(files).toHaveLength(9);
+    expect(files).toEqual(["remote_role_acquisition_engine.json"]);
     for (const file of files) {
       const source = await readFile(join(directory, file), "utf8");
       expect(JSON.parse(source).active).toBe(false);
       expect(source).not.toMatch(/credentialId|client_secret|refresh_token/i);
     }
+    const legacyFiles = (await readdir(join(process.cwd(), "n8n", "legacy-workflows"))).filter((file) => file.endsWith(".json"));
+    expect(legacyFiles).toHaveLength(10);
   });
 
   it("keeps the self-test workflow isolated behind a single-message Gmail path", async () => {
-    const source = await readFile(join(process.cwd(), "n8n", "workflows", "09_controlled_gmail_self_test.json"), "utf8");
+    const source = await readFile(join(process.cwd(), "n8n", "workflows", "remote_role_acquisition_engine.json"), "utf8");
     expect(source).toContain("self-test-prepare");
     expect(source).toContain("self-test-claim");
     expect(source).toContain("self-test-event");

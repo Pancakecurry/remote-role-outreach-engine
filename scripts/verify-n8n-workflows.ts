@@ -1,4 +1,20 @@
-import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
-async function main() { try { const directory = join(process.cwd(), "n8n/workflows"); const files = (await readdir(directory)).filter((file) => /^\d\d_.*\.json$/.test(file)).sort(); const entries = await Promise.all(files.map(async (file) => ({ file, source: await readFile(join(directory, file), "utf8") }))); const valid = entries.map(({ source }) => { const workflow = JSON.parse(source) as { active?: boolean; name?: string; nodes?: unknown[] }; return workflow.active === false && Boolean(workflow.name) && Array.isArray(workflow.nodes) && !/credentialId|client_secret|refresh_token|api[_-]?key\s*[:=]\s*["'][^"']+/i.test(source) && /INTERNAL_API_BASE_URL/.test(source) && /httpHeaderAuth/.test(source); }); const source = (prefix: string) => entries.find((entry) => entry.file.startsWith(prefix))?.source ?? ""; const master = source("00_"); const selfTest = source("09_"); const send = source("05_"); const monitor = source("06_"); const masterSafe = /0 17 \* \* \*/.test(master) && /pipeline\/master/.test(master) && /operations\/status/.test(master); const selfTestSafe = /self-test-prepare/.test(selfTest) && /self-test-claim/.test(selfTest) && /self-test-event/.test(selfTest) && /n8n-nodes-base\.gmail/.test(selfTest) && /active": false/.test(selfTest); const gmailTemplates = /n8n-nodes-base\.gmail/.test(send) && /mark-sent/.test(send) && /n8n-nodes-base\.gmail/.test(monitor) && /Keep sanitized metadata only/.test(monitor); console.log(`N8N_WORKFLOWS_COUNT: ${files.length}`); console.log(`N8N_MASTER_ORCHESTRATION: ${masterSafe ? "PASS" : "FAIL"}`); console.log(`N8N_SELF_TEST_GUARDS: ${selfTestSafe ? "PASS" : "FAIL"}`); console.log(`N8N_GMAIL_TEMPLATES: ${gmailTemplates ? "PASS" : "FAIL"}`); console.log(`N8N_WORKFLOWS_VALID: ${files.length === 10 && valid.every(Boolean) && masterSafe && selfTestSafe && gmailTemplates ? "PASS" : "FAIL"}`); if (files.length !== 10 || !valid.every(Boolean) || !masterSafe || !selfTestSafe || !gmailTemplates) process.exitCode = 1; } catch { console.log("N8N_WORKFLOWS_VALID: FAIL"); process.exitCode = 1; } }
+import { inspectUnifiedN8nWorkflow } from "./unified-n8n-contract";
+
+async function main() {
+  try {
+    const result = await inspectUnifiedN8nWorkflow();
+    const pass = Object.values(result.checks).every(Boolean);
+    console.log("N8N_WORKFLOWS_CANONICAL: Remote Role Acquisition Engine");
+    console.log(`N8N_WORKFLOWS_COUNT: 1`);
+    console.log(`N8N_MASTER_ORCHESTRATION: ${result.checks.parity00 ? "PASS" : "FAIL"}`);
+    console.log(`N8N_SELF_TEST_GUARDS: ${result.checks.selfTestIsolation ? "PASS" : "FAIL"}`);
+    console.log(`N8N_GMAIL_TEMPLATES: ${result.checks.gmailBranches ? "PASS" : "FAIL"}`);
+    console.log(`N8N_WORKFLOWS_VALID: ${pass ? "PASS" : "FAIL"}`);
+    if (!pass) process.exitCode = 1;
+  } catch {
+    console.log("N8N_WORKFLOWS_VALID: FAIL");
+    process.exitCode = 1;
+  }
+}
+
 void main();

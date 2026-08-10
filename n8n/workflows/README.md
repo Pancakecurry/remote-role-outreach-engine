@@ -1,11 +1,7 @@
-# Reserved future workflows
+# Canonical n8n workflow
 
-- `01_daily_job_discovery`
-- `02_job_normalization_and_assessment`
-- `03_public_contact_discovery`
-- `04_gmail_initial_outreach`
-- `05_gmail_reply_and_bounce_monitor`
-- `06_gmail_followup_scheduler`
-- `07_operations_and_alerts`
+`remote_role_acquisition_engine.json` is the only canonical production workflow template. It contains the complete acquisition, delivery, inbox, follow-up, operations, and controlled self-test branches on one inactive canvas.
 
-Phase 1 intentionally contains no executable production workflow JSON. Do not start n8n automatically.
+Assign the shared Header Auth credential to internal HTTP nodes and `Gmail Outreach — Dedicated` only to Gmail nodes after a manual import. Keep the workflow inactive until the owner completes the self-test and activation gate.
+
+The prior `00`–`09` templates are archived in `../legacy-workflows/` for parity traceability only.
