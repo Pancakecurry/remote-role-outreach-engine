@@ -17,12 +17,14 @@ export async function claimOutreachMessages(ownerId: string, limit: number) {
   const db = createAdminSupabaseClient();
   const settings = await db.from("system_settings").select("outreach_mode,autosend_enabled,daily_send_limit").eq("owner_id", ownerId).maybeSingle();
   if (settings.error || !productionDeliveryEnabled(settings.data)) return { claimed: 0, messages: [], reason: "DRY_RUN_AUTOSEND_DISABLED" };
+  const configuredSettings = settings.data;
+  if (!configuredSettings) return { claimed: 0, messages: [], reason: "DRY_RUN_AUTOSEND_DISABLED" };
   const sent = await db.from("messages").select("id", { count: "exact", head: true }).eq("owner_id", ownerId).eq("direction", "OUTBOUND").eq("status", "SENT").gte("sent_at", new Date(new Date().setHours(0, 0, 0, 0)).toISOString());
-  if (sent.error || (sent.count ?? 0) >= settings.data.daily_send_limit) return { claimed: 0, messages: [], reason: "DAILY_LIMIT_REACHED" };
+  if (sent.error || (sent.count ?? 0) >= configuredSettings.daily_send_limit) return { claimed: 0, messages: [], reason: "DAILY_LIMIT_REACHED" };
   const sequences = await db.from("outreach_sequences").select("id,job_id,email_candidate_id,state,followup_count,paused,claim_token,claim_lease_expires_at,jobs!inner(active,fit_score,fit_confidence,selected_for_action,companies!inner(id)),email_candidates!inner(email)").eq("owner_id", ownerId).eq("is_demo", false).eq("is_test", false).eq("paused", false).in("state", Object.keys(claimedState)).order("next_action_at", { ascending: true }).limit(Math.min(limit, 2));
   if (sequences.error) return { claimed: 0, messages: [], reason: "QUEUE_UNAVAILABLE" };
   for (const sequence of sequences.data ?? []) {
-    const job = Array.isArray(sequence.jobs) ? sequence.jobs[0] : sequence.jobs; const email = Array.isArray(sequence.email_candidates) ? sequence.email_candidates[0]?.email : sequence.email_candidates?.email;
+    const job = Array.isArray(sequence.jobs) ? sequence.jobs[0] : sequence.jobs; const emailCandidate = Array.isArray(sequence.email_candidates) ? sequence.email_candidates[0] : sequence.email_candidates; const email = (emailCandidate as { email?: string } | null)?.email;
     if (!job?.active || !job.selected_for_action || (job.fit_score ?? 0) < pipelineThresholds.autosend.fitScore || (job.fit_confidence ?? 0) < pipelineThresholds.autosend.confidence || !email || terminal.includes(sequence.state) || sequence.followup_count > 2) continue;
     const evidence = await db.from("contact_evidence").select("id,confidence,public_explicit,domain_matches,mx_status,requires_human_review,rejection_reasons,autosend_eligible").eq("owner_id", ownerId).eq("email_candidate_id", sequence.email_candidate_id).eq("selected_recipient", true).maybeSingle();
     const safeEvidence = evidence.data && evidence.data.confidence === "VERIFIED_PUBLIC" && evidence.data.public_explicit && evidence.data.domain_matches && evidence.data.mx_status === "PRESENT" && !evidence.data.requires_human_review && evidence.data.rejection_reasons.length === 0;
