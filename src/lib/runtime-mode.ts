@@ -1,5 +1,3 @@
-import "server-only";
-
 export const PRIVATE_RUNTIME_MODE = "operational" as const;
 
 /**
