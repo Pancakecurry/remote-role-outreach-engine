@@ -1,6 +1,6 @@
 # Final owner verification and activation
 
-This document is owner-operated. Keep `OUTREACH_MODE=dry_run`, `AUTOSEND_ENABLED=false`, and `DAILY_SEND_LIMIT=2` until every dry-run and self-test check below passes.
+This document is owner-operated. Keep `OUTREACH_MODE=dry_run`, `OUTREACH_ENABLED=false`, and `DAILY_SEND_LIMIT=2` until every dry-run and self-test check below passes.
 
 ## A. Verify the private operational CRM
 
@@ -49,11 +49,11 @@ This document is owner-operated. Keep `OUTREACH_MODE=dry_run`, `AUTOSEND_ENABLED
 
 ## G. Optional production activation
 
-Only proceed after a passing self-test and an explicit owner decision. Keep the daily limit at 2. Set `OUTREACH_MODE=live` and `AUTOSEND_ENABLED=true`, restart with `npm run stack:restart`, and run `npm run verify:end-to-end`.
+Only proceed after a passing self-test and an explicit owner decision. Keep the daily limit at 2. Set `OUTREACH_MODE=live` and `OUTREACH_ENABLED=true`, restart with `npm run stack:restart`, and run `npm run verify:end-to-end`.
 
 The unified workflow contains multiple Schedule Triggers. Activating this one workflow activates all of its schedule triggers together, so assign and verify Header Auth/Gmail credentials before activation. Activate only after the inbox monitor, follow-up engine, operations branch, and send queue have been reviewed. The manual self-test remains harmless unless manually executed with its separate gate.
 
-For the first two real sends, inspect the CRM record before delivery: active role, correct company, public evidence, professional company-domain address, MX result, thresholds, truthful draft, no duplicate, and Gmail thread storage afterward. If anything is unexpected, immediately set `AUTOSEND_ENABLED=false`, restart the stack, and deactivate the unified workflow.
+For the first two real sends, inspect the CRM record before delivery: active role, correct company, public evidence, professional company-domain address, MX result, thresholds, truthful draft, no duplicate, and Gmail thread storage afterward. If anything is unexpected, immediately set `OUTREACH_ENABLED=false`, restart the stack, and deactivate the unified workflow.
 
 ## H. Screenshot, video, and publication checklist
 

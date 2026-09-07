@@ -28,6 +28,7 @@ export type ProviderFetchResult = {
   provider: JobSourceProvider; sourceId: string; fetchedAt: string; requestStatus: "SUCCESS" | "FAILED"; jobs: CanonicalIngestedJob[];
   totalReceived: number; malformedCount: number; payloadHash: string | null; retryCount: number; durationMs: number;
   sanitizedErrorCategory: string | null; retryAfter: number | null;
+  completeSnapshot?: boolean;
 };
 
 export type FetchContext = { fetchImpl?: typeof fetch; maxJobs?: number };

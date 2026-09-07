@@ -13,9 +13,13 @@ describe("end-to-end orchestration contract", () => {
     ]);
     expect(workflow).toContain('"name": "Remote Role Acquisition Engine"');
     expect(workflow).toContain('"active": false');
-    expect(workflow).toContain("0 17 * * *");
+    expect(workflow).toContain("0 */4 * * *");
+    expect(workflow).toContain("0 19 * * *");
+    expect(workflow).toContain("/api/internal/pipeline/packages");
     expect(workflow).toContain("/api/internal/jobs/ingest");
     expect(workflow).toContain("/api/internal/outreach/claim");
+    expect(workflow).toContain("/api/internal/operations/daily-summary");
+    expect(workflow).toContain("Claim One Owner Daily Summary");
     expect(workflow).not.toContain("executeWorkflow");
     expect(queue).toContain("DRY_RUN_AUTOSEND_DISABLED");
     expect(queue).toContain("claim_lease_expires_at");

@@ -10,4 +10,4 @@ export function authorizeInternal(request: Request) {
   return null;
 }
 
-export const deliveryModeAllowsSend = () => process.env.OUTREACH_MODE === "live" && process.env.AUTOSEND_ENABLED === "true";
+export const deliveryModeAllowsSend = () => process.env.OUTREACH_MODE === "live" && process.env.OUTREACH_ENABLED === "true";

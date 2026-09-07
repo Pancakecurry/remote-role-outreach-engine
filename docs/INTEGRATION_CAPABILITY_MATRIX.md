@@ -12,4 +12,5 @@
 | Gmail sending | Write | OAuth | Disabled | 7 | No send |
 | Gmail thread retrieval | Read | OAuth | Disabled | 8 | Pause sequence |
 | Gmail reply monitoring | Read | OAuth | Disabled | 8 | Manual review |
+| Daily summary email | Write to owner-only address | OAuth | Disabled | 9 | CRM remains source of truth; no message sent |
 | n8n scheduling | Write orchestration | n8n env | Compose contract only | 1 | No automation |

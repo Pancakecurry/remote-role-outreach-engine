@@ -15,5 +15,5 @@ export async function POST(request: Request) {
   const ownerId = z.string().uuid().safeParse(process.env.APP_OWNER_USER_ID);
   if (!ownerId.success) return NextResponse.json({ error: "NOT_CONFIGURED" }, { status: 503 });
   const result = await runJobIngestion(ownerId.data, { ...parsed.data, maxJobsPerSource: 250 });
-  return NextResponse.json({ mode: parsed.data.mode, sourcesAttempted: result.sourcesAttempted, sourcesSucceeded: result.sourcesSucceeded, sourcesFailed: result.sourcesFailed, fetched: result.fetched, valid: result.valid, malformed: result.malformed, inserted: result.inserted, updated: result.updated, unchanged: result.unchanged, reopened: result.reopened, closed: result.closed, locked: result.locked }, { status: result.locked ? 409 : 200 });
+  return NextResponse.json({ mode: parsed.data.mode, ...result }, { status: result.locked ? 409 : result.failed ? 502 : 200 });
 }

@@ -7,6 +7,7 @@ export type QualificationGateCandidate = {
   fitScore: number | null;
   confidence: number | null;
   remoteEligibility: "ELIGIBLE" | "MANUAL_REVIEW" | "INELIGIBLE" | null;
+  compensationBand?: "below_target" | "acceptable" | "strong" | "exceptional" | "unknown" | null;
 };
 
 const passes = (candidate: QualificationGateCandidate, threshold: { fitScore: number; confidence: number }) =>

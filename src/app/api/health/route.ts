@@ -31,5 +31,5 @@ export async function GET(request: Request) {
     }
   }
   // Liveness must not flap when the optional readiness probe reaches a transient database timeout.
-  return NextResponse.json({ application: "healthy", database: livenessOnly ? "not_checked" : databaseReachable ? "reachable" : "unavailable", databaseFailure, mode: process.env.OUTREACH_MODE === "live" ? "live" : "dry_run", autosend: process.env.AUTOSEND_ENABLED === "true" ? "enabled" : "disabled", timestamp: new Date().toISOString() });
+  return NextResponse.json({ application: "healthy", database: livenessOnly ? "not_checked" : databaseReachable ? "reachable" : "unavailable", databaseFailure, mode: process.env.OUTREACH_MODE === "live" ? "live" : "dry_run", outreach: process.env.OUTREACH_ENABLED === "true" ? "enabled" : "disabled", timestamp: new Date().toISOString() });
 }

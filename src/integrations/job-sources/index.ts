@@ -1,6 +1,6 @@
 import { ashbyAdapter } from "./ashby";
 import { greenhouseAdapter } from "./greenhouse";
-import { leverAdapter } from "./lever";
+import { leverAdapter } from "./lever/paginated";
 import type { JobSourceAdapter, JobSourceProvider } from "./types";
 export * from "./types";
 export * from "./normalization";

@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: .
+      context: ${APP_BUILD_CONTEXT:-.}
     restart: unless-stopped
     env_file:
       - .env.local
@@ -10,6 +10,14 @@ services:
     environment:
       - HOSTNAME=0.0.0.0
       - TZ=Asia/Kolkata
+      - RESUME_OUTPUT_DIR=/app/runtime/resumes
+      - SELF_TEST_MODE=true
+      - SELF_TEST_RECIPIENT=${SELF_TEST_RECIPIENT:-}
+      - OUTREACH_ENABLED=false
+      - AUTO_SUBMIT_ENABLED=false
+      - DAILY_SUMMARY_ENABLED=false
+    volumes:
+      - resume_data:/app/runtime/resumes
     healthcheck:
       test: ["CMD-SHELL", "wget -q -T 5 -O /dev/null 'http://127.0.0.1:3000/api/health?readiness=0'"]
       interval: 30s
@@ -29,8 +37,12 @@ services:
       - GENERIC_TIMEZONE=Asia/Kolkata
       - TZ=Asia/Kolkata
       - INTERNAL_API_BASE_URL=http://app:3000
+      - OUTREACH_ENABLED=false
+      - AUTO_SUBMIT_ENABLED=false
+      - DAILY_SUMMARY_ENABLED=false
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./n8n/workflows:/workflows:ro
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:5678/healthz"]
       interval: 30s
@@ -40,3 +52,4 @@ volumes:
   n8n_data:
     external: true
     name: docker_n8n_data
+  resume_data:

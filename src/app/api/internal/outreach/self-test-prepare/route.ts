@@ -17,7 +17,9 @@ export async function POST(request: Request) {
   const db = createAdminSupabaseClient();
   const subject = "[SELF TEST — NOT OUTREACH] Controlled Gmail integration check";
   const body = "[SELF TEST — NOT OUTREACH]\n\nThis isolated test verifies the local workflow only. It is not a company outreach message.";
-  const result = await db.from("self_test_sequences").upsert({ owner_id: owner.data, recipient: parsed.data.recipient, state: "PREPARED", subject, body_text: body, is_test: true, claim_token: null, claimed_at: null, lease_expires_at: null, gmail_message_id: null, gmail_thread_id: null, next_action_at: new Date(Date.now() + delay * 60_000).toISOString(), replied_at: null, bounced_at: null, opted_out_at: null }, { onConflict: "owner_id,recipient" }).select("id").single();
+  const inserted = await db.from("self_test_sequences").upsert({ owner_id: owner.data, recipient: parsed.data.recipient, state: "PREPARED", subject, body_text: body, is_test: true, next_action_at: new Date(Date.now() + delay * 60_000).toISOString() }, { onConflict: "owner_id,recipient", ignoreDuplicates: true });
+  if (inserted.error) return NextResponse.json({ error: "SELF_TEST_UNAVAILABLE" }, { status: 503 });
+  const result = await db.from("self_test_sequences").select("id").eq("owner_id", owner.data).eq("recipient", parsed.data.recipient).single();
   if (result.error || !result.data) return NextResponse.json({ error: "SELF_TEST_UNAVAILABLE" }, { status: 503 });
   const hash = createHash("sha256").update(`self-test-prepared:${result.data.id}`).digest("hex");
   await db.from("integration_events").upsert({ owner_id: owner.data, integration: "self_test", event_type: "PREPARED", status: "INFO", dedup_hash: hash, detail: { isolated: true } }, { onConflict: "owner_id,integration,dedup_hash" });

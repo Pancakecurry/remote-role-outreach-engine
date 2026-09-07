@@ -12,5 +12,10 @@ supabase/.temp/
 coverage/
 playwright-report/
 test-results/
+assets/resumes/
+output/
+tmp/
+runtime/
+docs/LOCAL_ACTIVATION_STATE.md
 .DS_Store
 *.tsbuildinfo

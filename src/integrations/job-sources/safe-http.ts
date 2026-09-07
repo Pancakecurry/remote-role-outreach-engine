@@ -21,14 +21,14 @@ export function isAllowedProviderUrl(value: string) {
 export async function safeProviderJson(url: string, fetchImpl: typeof fetch = fetch) {
   if (!isAllowedProviderUrl(url)) throw new Error("ATS_ORIGIN_REJECTED");
   let retryCount = 0;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     try {
       const response = await fetchImpl(url, { method: "GET", redirect: "error", signal: controller.signal, headers: { Accept: "application/json", "User-Agent": "RemoteRoleOutreachEngine/0.1 public-ats-read-only" } });
       const retryAfter = Number(response.headers.get("retry-after")) || null;
       if (!response.ok) {
-        if (attempt === 0 && retryable.has(response.status)) { retryCount += 1; await new Promise((resolve) => setTimeout(resolve, Math.min((retryAfter ?? 1) * 1000, 5_000))); continue; }
+        if (attempt < 2 && retryable.has(response.status)) { retryCount += 1; await new Promise((resolve) => setTimeout(resolve, Math.min((retryAfter ?? 2 ** attempt) * 1000, 8_000))); continue; }
         throw new Error(`ATS_HTTP_${response.status}`);
       }
       const length = Number(response.headers.get("content-length"));
@@ -38,7 +38,7 @@ export async function safeProviderJson(url: string, fetchImpl: typeof fetch = fe
       return { payload: JSON.parse(text) as unknown, retryCount, retryAfter };
     } catch (error) {
       const category = error instanceof Error ? error.message : "ATS_NETWORK_ERROR";
-      if (attempt === 0 && (category === "ATS_NETWORK_ERROR" || category === "The operation was aborted.")) { retryCount += 1; continue; }
+      if (attempt < 2 && (category === "ATS_NETWORK_ERROR" || category === "The operation was aborted." || /abort|network|fetch/i.test(category))) { retryCount += 1; continue; }
       throw error;
     } finally { clearTimeout(timer); }
   }

@@ -19,6 +19,6 @@ export const safeUrl = (value: unknown, fallback: string) => { try { const url =
 export const nullableText = (value: unknown) => typeof value === "string" && value.trim() ? value.trim().slice(0, 500) : null;
 export const nullableDate = (value: unknown) => { const date = new Date(String(value ?? "")); return Number.isNaN(date.getTime()) ? null : date.toISOString(); };
 export function buildCanonical(source: JobSourceConfig, value: Omit<CanonicalIngestedJob, "sourceId" | "companyName" | "companyDomain" | "normalizedTitle" | "payloadHash" | "dedupHash" | "active" | "qualificationStatus" | "isDemo">): CanonicalIngestedJob {
-  const title = cleanTitle(value.title); const stable = `${source.id}|${value.externalJobId}|${value.postingUrl}`; const payloadHash = sha256(JSON.stringify(value));
+  const title = cleanTitle(value.title); const stable = `${source.companyDomain.toLowerCase()}|${normalizedTitle(title)}|${value.locationText.toLowerCase()}`; const payloadHash = sha256(JSON.stringify(value));
   return { ...value, sourceId: source.id, companyName: source.companyName, companyDomain: source.companyDomain.toLowerCase(), title, normalizedTitle: normalizedTitle(title), payloadHash, dedupHash: sha256(stable), active: true, qualificationStatus: "PENDING", isDemo: false };
 }

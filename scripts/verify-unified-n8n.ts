@@ -8,7 +8,7 @@ async function main() {
     console.log(`UNIFIED_N8N_TRIGGERS: ${result.triggerCount}`);
     console.log(`UNIFIED_N8N_CANONICAL: ${check("canonicalFile")}`);
     console.log(`UNIFIED_N8N_INACTIVE: ${check("inactive")}`);
-    console.log(`UNIFIED_N8N_SCHEDULES: ${["dailyTrigger", "timezone", "sendTrigger", "inboxTrigger", "followupTrigger", "operationsTrigger", "selfTestTrigger"].every((name) => result.checks[name]) ? "PASS" : "FAIL"}`);
+    console.log(`UNIFIED_N8N_SCHEDULES: ${["dailyTrigger", "timezone", "sendTrigger", "inboxTrigger", "followupTrigger", "operationsTrigger", "summaryTrigger", "selfTestTrigger"].every((name) => result.checks[name]) ? "PASS" : "FAIL"}`);
     console.log(`UNIFIED_N8N_ENDPOINTS: ${check("applicationEndpoints")}`);
     console.log(`UNIFIED_N8N_GMAIL_GATES: ${["gmailBranches", "replyBounceOptOut", "followupLimit", "selfTestIsolation"].every((name) => result.checks[name]) ? "PASS" : "FAIL"}`);
     console.log(`UNIFIED_N8N_SAFETY: ${["operationalOnly", "noExecuteWorkflow", "noEmbeddedCredentials", "supabaseSourceOfTruth", "noAtsWrites", "noLinkedIn", "noGuessedEmail", "noPaidProvider"].every((name) => result.checks[name]) ? "PASS" : "FAIL"}`);

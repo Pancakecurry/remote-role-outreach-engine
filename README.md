@@ -6,9 +6,9 @@ The release candidate now has one canonical n8n workflow: `Remote Role Acquisiti
 
 Useful checks: `npm run verify:supabase`, `npm run verify:owner`, `npm run verify:demo`, and `npm run test:smoke`.
 
-Private, zero-paid-contact-data CRM for manual applications, bounded public-contact evidence, and guarded outreach operations. `npm run dev` and `npm run stack:start` always start the authenticated **operational** application; it reads real Supabase state and never falls back to showcase fixtures. The credential-free synthetic portfolio experience lives only in the separate `Remote Role Acquisition Engine Showcase` repository.
+Private, zero-paid-contact-data CRM for manual applications, bounded public-contact evidence, guarded outreach operations, mission-aware compensation ranking, and an owner-only daily summary. `npm run dev` and `npm run stack:start` always start the authenticated **operational** application; it reads real Supabase state and never falls back to showcase fixtures. The credential-free synthetic portfolio experience lives only in the separate `Remote Role Acquisition Engine Showcase` repository.
 
-Migration history is authoritative and the single owner account is already provisioned. The next manual gate is the isolated Gmail self-test; there is no public sign-up flow.
+Migration history is authoritative and the single owner account is already provisioned. The next manual gate is the isolated Gmail self-test; there is no public sign-up flow. Applications remain a manual, owner-recorded action. Outreach and daily summaries stay disabled until their separate activation gates are deliberately completed.
 
 ## Commands
 

@@ -1,0 +1,26 @@
+{
+  "version": "2026-09-04-approved-originals-v1",
+  "resumes": [
+    {
+      "id": "ai-application-developer",
+      "label": "AI Application Developer",
+      "sourcePath": "assets/resumes/updated/ai-application-developer.pdf",
+      "baseTitle": "AI Application Developer | Automation Engineer",
+      "keywords": ["application", "automation", "n8n", "integration", "api", "webhook", "react", "next.js", "typescript", "implementation"]
+    },
+    {
+      "id": "technical-support-engineer",
+      "label": "Technical Support Engineer",
+      "sourcePath": "assets/resumes/updated/technical-support-engineer.pdf",
+      "baseTitle": "Technical Support Engineer | Product Troubleshooting & Customer Success",
+      "keywords": ["support", "customer", "troubleshoot", "implementation", "solutions", "operations", "incident", "debug", "success", "technical"]
+    },
+    {
+      "id": "ai-product-engineer",
+      "label": "AI Product Engineer",
+      "sourcePath": "assets/resumes/updated/ai-product-engineer.pdf",
+      "baseTitle": "AI Product Engineer | Full-Stack AI Systems, Agents & Automation",
+      "keywords": ["ai", "agent", "rag", "llm", "product", "full-stack", "python", "fastapi", "document", "founding"]
+    }
+  ]
+}

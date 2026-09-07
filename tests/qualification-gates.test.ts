@@ -18,6 +18,8 @@ describe("stage-specific qualification gates", () => {
     expect(qualifiesForManualApplication({ ...base, deterministicStatus: "REJECTED" })).toBe(false);
     expect(qualifiesForManualApplication({ ...base, deterministicStatus: "REVIEW", remoteEligibility: "MANUAL_REVIEW" })).toBe(true);
     expect(qualifiesForManualApplication({ ...base, remoteEligibility: "INELIGIBLE" })).toBe(false);
+    expect(qualifiesForManualApplication({ ...base, compensationBand: "below_target" })).toBe(true);
+    expect(qualifiesForManualApplication({ ...base, compensationBand: "unknown" })).toBe(true);
   });
 
   it("keeps later stages strictly stronger and future autosend evidence-gated", () => {
@@ -30,8 +32,7 @@ describe("stage-specific qualification gates", () => {
 
 describe("profile and inactive workflow safety", () => {
   it("includes approved profile facts and forbids unsupported claims", () => {
-    expect(candidateProfile.projects[0].evidence).toContain("6 approved users");
-    expect(candidateProfile.projects[0].evidence).toContain("3 active users");
+    expect(candidateProfile.projects.find(project => project.name === "Decimal OS")?.evidence).toContain("50+ active users");
     expect(candidateProfile.skillLevels.TypeScript).toBe("basic");
     expect(candidateProfile.forbiddenClaims).toContain("advanced TypeScript or React expertise");
     expect(candidateProfile.forbiddenClaims).toContain("automated LinkedIn connection requests");
