@@ -1,0 +1,5 @@
+{
+  "relocation": { "destination": "Not configured", "deadline": null, "requiresLocationFlexibleIncome": true },
+  "income": { "currency": "USD", "minimumMonthly": 3000, "comfortableMonthly": 4000, "targetMonthly": 5000, "idealMonthly": 7000 },
+  "application": { "unknownCompensation": "KEEP", "explicitlyBelowMinimum": "DEPRIORITIZE_NOT_REJECT" }
+}

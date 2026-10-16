@@ -1,6 +1,14 @@
 {
   "name": "remote-role-outreach-engine",
   "version": "0.1.0",
+  "description": "Safety-first, self-hosted job discovery, scoring, application packaging, CRM, and outreach orchestration.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pancakecurry/remote-role-outreach-engine.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -50,20 +58,21 @@
     "verify:outreach": "node --conditions=react-server --import tsx scripts/verify-outreach.ts",
     "verify:self-test": "node --conditions=react-server --import tsx scripts/verify-self-test.ts",
     "verify:production-readiness": "tsx scripts/verify-production-readiness.ts",
+    "verify:public-repo": "tsx scripts/verify-public-repo.ts",
     "verify:end-to-end": "node --conditions=react-server --import tsx scripts/verify-end-to-end.ts",
     "verify:release-candidate": "node --conditions=react-server --import tsx scripts/verify-release-candidate.ts",
     "diagnose:qualification": "node --conditions=react-server --import tsx scripts/diagnose-qualification.ts"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.12.4",
-    "@supabase/supabase-js": "^2.57.4",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "cheerio": "^1.1.2",
-    "next": "^16.2.12",
+    "next": "^16.4.2",
     "pdf-lib": "^1.17.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "server-only": "^0.0.1",
-    "zod": "^4.1.12"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.14",
@@ -71,10 +80,10 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "eslint": "^9.36.0",
-    "eslint-config-next": "^16.2.12",
+    "eslint-config-next": "^16.4.2",
     "tailwindcss": "^4.1.14",
-    "tsx": "^4.20.6",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vitest": "^5.0.5"
   }
 }

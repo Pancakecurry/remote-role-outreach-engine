@@ -17,5 +17,8 @@ output/
 tmp/
 runtime/
 docs/LOCAL_ACTIVATION_STATE.md
+docs/DAILY_AUTOMATION_RUNBOOK.md
+config/private/*.json
+!config/private/.gitkeep
 .DS_Store
 *.tsbuildinfo

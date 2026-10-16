@@ -13,7 +13,7 @@ This document is owner-operated. Keep `OUTREACH_MODE=dry_run`, `OUTREACH_ENABLED
 
 ## B. Verify the separate public showcase
 
-1. In `../Remote-Role-Acquisition-Engine-Showcase`, run `npm install`, `npm run verify:public-release`, `npm run verify:showcase`, and `npm run showcase`.
+1. In the separate showcase repository, run its documented public-release and showcase checks.
 2. Open the URL printed by Next.js. Confirm SHOWCASE DATA and SHOWCASE MODE are visible.
 3. Confirm no login, Supabase project, Gmail OAuth, Gemini credential, real company, or production endpoint is required. Stop the preview when finished.
 
@@ -59,7 +59,7 @@ For the first two real sends, inspect the CRM record before delivery: active rol
 
 Use the public showcase only for publicly shared CRM images. Capture Dashboard, Sources, Recommended Opportunities, Job Detail, Contacts, Outreach, and Operations. In n8n, capture the full unified workflow, a Daily Acquisition close-up, and a Gmail/reply/follow-up close-up; hide credential values and private email addresses.
 
-Follow `../Remote-Role-Acquisition-Engine-Showcase/docs/DEMO_SCRIPT.md` for a short video. Show the public pages first, then the inactive workflow canvas at roughly 45–60% zoom, and never mention internal coding tools, private credentials, or real contacts.
+Follow the showcase repository's `docs/DEMO_SCRIPT.md` for a short video. Show public pages first, then the inactive workflow canvas, and never expose private credentials or real contacts.
 
 Before GitHub publication, run `npm run verify:public-release`, `npm run verify:showcase`, inspect `git status`, create a new public GitHub repository, add that remote only to the public showcase repository, and push that repository. Verify README and Mermaid rendering after push. Never push the private operational repository without a separate owner decision.
 

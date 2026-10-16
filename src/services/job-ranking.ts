@@ -8,7 +8,7 @@ export type RankingInput = {
 };
 
 const clamp = (value: number) => Math.max(0, Math.min(100, value));
-export function compensationBandFromMonthlyPhp(value: number | null): CompensationBand {
+export function compensationBandFromMonthlyAmount(value: number | null): CompensationBand {
   if (value === null || !Number.isFinite(value)) return "unknown";
   if (value < missionPriorities.income.minimumMonthly) return "below_target";
   if (value < missionPriorities.income.targetMonthly) return "acceptable";

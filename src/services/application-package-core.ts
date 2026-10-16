@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { z } from "zod";
+import { candidateProfile } from "@/config/candidate-profile";
 
 export const resumeConfigSchema = z.object({
   version: z.string().min(1),
@@ -9,13 +10,7 @@ export type ResumeConfig = z.infer<typeof resumeConfigSchema>;
 export type JobForPackage = { id: string; title: string; company: string; description: string; applicationUrl: string; provider: string | null; compensationBand: "below_target" | "acceptable" | "strong" | "exceptional" | "unknown"; fitScore: number; strongestMatches: string[]; relevantProject: string | null };
 export type ScreeningQuestion = { id: string; question: string; required: boolean };
 
-const approvedFacts = {
-  decimal: "I built and currently support Decimal OS, a 70+ screen Flutter/FastAPI/Supabase product with grounded RAG and 50+ active users.",
-  outreach: "I built the Remote Role Outreach Engine with Next.js, TypeScript, Supabase, n8n, Gmail API safety controls, and Greenhouse/Lever/Ashby ingestion.",
-  support: "I reproduce issues, trace frontend/backend/API/database failures, document fixes, and communicate clearly with technical and non-technical users.",
-  automation: "I build maintainable automations with n8n, APIs, webhooks, Gmail, CRM workflows, and structured AI outputs.",
-  education: "My B.Tech in Artificial Intelligence and Machine Learning spans 2022–2026.",
-} as const;
+const approvedFacts = candidateProfile.applicationFacts;
 
 export function selectBaseResume(config: ResumeConfig, job: Pick<JobForPackage, "title" | "description">) {
   const text = `${job.title} ${job.description}`.toLowerCase();
@@ -31,22 +26,22 @@ export function applicationCapability(provider: string | null) {
 export function answerScreeningQuestions(questions: ScreeningQuestion[]) {
   return questions.map((item) => {
     const text = item.question.toLowerCase();
-    if (/rag|retrieval|document intelligence/.test(text)) return { ...item, answer: approvedFacts.decimal, status: "ANSWERED" as const, evidence: "Decimal OS" };
-    if (/automation|n8n|webhook|integration/.test(text)) return { ...item, answer: approvedFacts.automation, status: "ANSWERED" as const, evidence: "Remote Role Outreach Engine" };
-    if (/support|troubleshoot|debug|customer/.test(text)) return { ...item, answer: approvedFacts.support, status: "ANSWERED" as const, evidence: "Decimal OS and production debugging" };
+    if (/rag|retrieval|document intelligence/.test(text)) return { ...item, answer: approvedFacts.rag, status: "ANSWERED" as const, evidence: "Candidate profile: RAG" };
+    if (/automation|n8n|webhook|integration/.test(text)) return { ...item, answer: approvedFacts.automation, status: "ANSWERED" as const, evidence: "Candidate profile: automation" };
+    if (/support|troubleshoot|debug|customer/.test(text)) return { ...item, answer: approvedFacts.support, status: "ANSWERED" as const, evidence: "Candidate profile: support" };
     if (/degree|education|graduate/.test(text)) return { ...item, answer: approvedFacts.education, status: "ANSWERED" as const, evidence: "Education" };
     return { ...item, answer: null, status: "OWNER_INPUT_REQUIRED" as const, evidence: null };
   });
 }
 
-const projectFor = (job: JobForPackage) => /support|customer|implementation|solutions|operations/i.test(job.title) ? approvedFacts.support : /automation|integration|n8n/i.test(`${job.title} ${job.description}`) ? approvedFacts.outreach : approvedFacts.decimal;
+const projectFor = (job: JobForPackage) => /support|customer|implementation|solutions|operations/i.test(job.title) ? approvedFacts.support : /automation|integration|n8n/i.test(`${job.title} ${job.description}`) ? approvedFacts.automation : approvedFacts.rag;
 export function buildApplicationPackage(config: ResumeConfig, job: JobForPackage, questions: ScreeningQuestion[] = []) {
   const base = selectBaseResume(config, job);
   const proof = projectFor(job);
   const title = job.title.length <= 70 ? job.title : base.baseTitle;
   const summary = `${base.label} with hands-on experience building, shipping, and supporting production AI and automation systems. Strongest match for this role: ${(job.strongestMatches.slice(0, 3).join(", ") || "full-stack ownership, practical debugging, and clear communication")}.`;
-  const coverLetter = `Hey! 👋\n\nIt looks like ${job.company} needs someone who can make ${job.title} work reliably in practice.\n\n${proof}\n\nMy approach is simple: understand → build or fix → test → make it reliable.\n\nQuick question: what is the most important outcome you want this person to own in the first 60 days?\n\nCheers,\nArnav`;
-  const whyFit = `${job.strongestMatches.slice(0, 3).join("; ") || "Relevant production engineering and support experience"}. Best proof: ${job.relevantProject || "Decimal OS"}.`;
+  const coverLetter = `Hey! 👋\n\nIt looks like ${job.company} needs someone who can make ${job.title} work reliably in practice.\n\n${proof}\n\nMy approach is simple: understand → build or fix → test → make it reliable.\n\nQuick question: what is the most important outcome you want this person to own in the first 60 days?\n\nCheers,\n${candidateProfile.closingName}`;
+  const whyFit = `${job.strongestMatches.slice(0, 3).join("; ") || "Relevant production engineering and support experience"}. Best proof: ${job.relevantProject || candidateProfile.projects[0]?.name || "Verified project"}.`;
   const salaryRecommendation = job.compensationBand === "below_target" ? "Apply if strategically useful; clarify growth, hours, and review timing." : job.compensationBand === "unknown" ? "Ask for the approved budget or range before committing." : "Use the published range and target its upper half when the scope matches.";
   const screeningAnswers = answerScreeningQuestions(questions);
   const ownerInput = screeningAnswers.filter((answer) => answer.status === "OWNER_INPUT_REQUIRED");

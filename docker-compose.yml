@@ -11,6 +11,8 @@ services:
       - HOSTNAME=0.0.0.0
       - TZ=Asia/Kolkata
       - RESUME_OUTPUT_DIR=/app/runtime/resumes
+      - CANDIDATE_PROFILE_PATH=/app/private-config/candidate-profile.json
+      - MISSION_PRIORITIES_PATH=/app/private-config/mission-priorities.json
       - SELF_TEST_MODE=true
       - SELF_TEST_RECIPIENT=${SELF_TEST_RECIPIENT:-}
       - OUTREACH_ENABLED=false
@@ -18,6 +20,7 @@ services:
       - DAILY_SUMMARY_ENABLED=false
     volumes:
       - resume_data:/app/runtime/resumes
+      - ./config/private:/app/private-config:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -q -T 5 -O /dev/null 'http://127.0.0.1:3000/api/health?readiness=0'"]
       interval: 30s

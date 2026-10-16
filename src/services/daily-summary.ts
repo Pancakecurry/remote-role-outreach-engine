@@ -73,7 +73,7 @@ export async function claimDailySummary(ownerId: string): Promise<DailySummaryCl
     "",
     "SYSTEM HEALTH", `ATS source failures: ${sourceFailures}\nGmail health: ${process.env.OUTREACH_ENABLED === "true" ? "enabled after isolated test" : "sending disabled"}\nWorkflow failures: ${failures}\nPackage-generation failures: ${packageFailures}`,
     "",
-    `Mission lens: prefer lawful, location-flexible income. Known compensation below PHP ${missionPriorities.income.minimumMonthly.toLocaleString("en-PH")} per month is deprioritized; undisclosed compensation requires review, not a guess.`,
+    `Mission lens: prefer lawful, location-flexible income. Known compensation below ${missionPriorities.income.currency} ${missionPriorities.income.minimumMonthly.toLocaleString()} per month is deprioritized; undisclosed compensation requires review, not a guess.`,
   ].join("\n");
   const sendAllowed = summaryEnabled() && Boolean(recipient());
   const saved = await db.from("integration_events").update({ detail: { day, state: sendAllowed ? "CLAIMED" : "GENERATED", subject: `Job-search summary — ${day}`, bodyText } }).eq("owner_id", ownerId).eq("integration", "DAILY_SUMMARY").eq("dedup_hash", dedup);

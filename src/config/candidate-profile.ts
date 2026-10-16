@@ -1,12 +1,9 @@
-export const candidateProfile = {
-  name: "Sample Candidate",
-  positioning: "Technical professional",
-  location: "Not configured",
-  availability: "Discuss during application",
-  remoteWork: "preferred",
-  education: { degree: "Verified degree", completedYear: 2025, provisionalCertificateAvailable: false },
-  capabilities: ["Add verified skills"],
-  projects: [{ name: "Verified project", evidence: ["Add verified evidence"] }],
-  experience: ["Add verified experience"],
-  forbiddenClaims: ["invented claims"],
-} as const;
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import example from "../../config/candidate-profile.example.json";
+import { candidateProfileSchema } from "@/schemas";
+
+const path = resolve(/* turbopackIgnore: true */ process.env.CANDIDATE_PROFILE_PATH ?? "config/private/candidate-profile.json");
+
+/** Runtime-owned candidate facts. The tracked fallback contains sample data only. */
+export const candidateProfile = candidateProfileSchema.parse(existsSync(/* turbopackIgnore: true */ path) ? JSON.parse(readFileSync(/* turbopackIgnore: true */ path, "utf8")) : example);

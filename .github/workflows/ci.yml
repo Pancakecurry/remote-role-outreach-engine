@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run verify:public-repo
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test -- --run
+      - run: npm run verify:n8n-workflows
+      - run: npm run verify:unified-n8n
+      - run: npm run build
+        env:
+          OUTREACH_ENABLED: "false"
+          AUTO_SUBMIT_ENABLED: "false"
+          DAILY_SUMMARY_ENABLED: "false"

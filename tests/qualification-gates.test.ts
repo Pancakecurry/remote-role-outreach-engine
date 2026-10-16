@@ -31,11 +31,11 @@ describe("stage-specific qualification gates", () => {
 });
 
 describe("profile and inactive workflow safety", () => {
-  it("includes approved profile facts and forbids unsupported claims", () => {
-    expect(candidateProfile.projects.find(project => project.name === "Decimal OS")?.evidence).toContain("50+ active users");
-    expect(candidateProfile.skillLevels.TypeScript).toBe("basic");
-    expect(candidateProfile.forbiddenClaims).toContain("advanced TypeScript or React expertise");
-    expect(candidateProfile.forbiddenClaims).toContain("automated LinkedIn connection requests");
+  it("loads a complete private-or-example profile without weakening claim controls", () => {
+    expect(candidateProfile.closingName.length).toBeGreaterThan(0);
+    expect(candidateProfile.projects.length).toBeGreaterThan(0);
+    expect(candidateProfile.applicationFacts.rag.length).toBeGreaterThan(0);
+    expect(candidateProfile.forbiddenClaims.length).toBeGreaterThan(0);
   });
 
   it("keeps all n8n workflow templates inactive and credential-free", async () => {
@@ -63,7 +63,7 @@ describe("profile and inactive workflow safety", () => {
   it("rejects drafts that make forbidden or unsupported claims", () => {
     const body = Array(80).fill("evidence").join(" ");
     const followup = Array(35).fill("followup").join(" ");
-    const result = validateOutreachDraft({ subject: "Hello", recipientFirstName: "Team", openingReason: "Role", roleReference: "Role", relevantEvidence: "Evidence", bodyText: `${body} 10+ active Decimal OS users`, bodyHtml: "<p />", followupOne: followup, followupTwo: followup, factualClaimsUsed: ["invented claim"], sourceFacts: ["Official application portal recorded", "Public contact evidence stored"], confidence: 0.8, requiresHumanReview: false }, { applicationStatus: "NOT_STARTED", recipientName: null, companyName: "Example" });
+    const result = validateOutreachDraft({ subject: "Hello", recipientFirstName: "Team", openingReason: "Role", roleReference: "Role", relevantEvidence: "Evidence", bodyText: `${body} invented candidate claim`, bodyHtml: "<p />", followupOne: followup, followupTwo: followup, factualClaimsUsed: ["invented claim"], sourceFacts: ["Official application portal recorded", "Public contact evidence stored"], confidence: 0.8, requiresHumanReview: false }, { applicationStatus: "NOT_STARTED", recipientName: null, companyName: "Example" });
     expect(result.valid).toBe(false);
   });
 });

@@ -42,14 +42,14 @@ const hash = crypto.createHash("sha256").update(raw + "runtime-bindings-v3").dig
 const marker = "/home/node/.n8n/acquisition-workflow.sha256";
 if (fs.existsSync(marker) && fs.readFileSync(marker, "utf8") === hash) { console.log("unchanged"); process.exit(0); }
 const workflow = JSON.parse(raw);
-workflow.id = process.env.ACQUISITION_WORKFLOW_ID || "REDACTED_LOCAL_WORKFLOW_ID";
+if (process.env.ACQUISITION_WORKFLOW_ID) workflow.id = process.env.ACQUISITION_WORKFLOW_ID;
 for (const node of workflow.nodes) {
   if (node.parameters.sendBody && typeof node.parameters.jsonBody === "string") node.parameters.specifyBody = "json";
   // Bind only these non-secret values; n8n keeps environment access restricted.
   if (typeof node.parameters.url === "string") node.parameters.url = node.parameters.url.replace("={{ $env.INTERNAL_API_BASE_URL }}", "http://app:3000");
   if (typeof node.parameters.jsonBody === "string") node.parameters.jsonBody = node.parameters.jsonBody.replace("={{ $env.SELF_TEST_RECIPIENT }}", process.env.GMAIL_SENDER_ADDRESS || "");
-  if (node.type === "n8n-nodes-base.gmail") node.credentials = { gmailOAuth2: { id: process.env.ACQUISITION_GMAIL_CREDENTIAL_ID || "REDACTED_LOCAL_GMAIL_CREDENTIAL_ID", name: "Gmail account" } };
-  if (node.parameters.genericAuthType === "httpHeaderAuth") node.credentials = { httpHeaderAuth: { id: process.env.ACQUISITION_HEADER_CREDENTIAL_ID || "REDACTED_LOCAL_HEADER_CREDENTIAL_ID", name: "Header Auth account" } };
+  if (node.type === "n8n-nodes-base.gmail" && process.env.ACQUISITION_GMAIL_CREDENTIAL_ID) node.credentials = { gmailOAuth2: { id: process.env.ACQUISITION_GMAIL_CREDENTIAL_ID, name: "Gmail account" } };
+  if (node.parameters.genericAuthType === "httpHeaderAuth" && process.env.ACQUISITION_HEADER_CREDENTIAL_ID) node.credentials = { httpHeaderAuth: { id: process.env.ACQUISITION_HEADER_CREDENTIAL_ID, name: "Header Auth account" } };
 }
 fs.writeFileSync("/tmp/acquisition-workflow.json", JSON.stringify(workflow));
 fs.writeFileSync("/tmp/acquisition-workflow.sha256", hash);

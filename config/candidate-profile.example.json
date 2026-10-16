@@ -1,0 +1,19 @@
+{
+  "name": "Sample Candidate",
+  "closingName": "Candidate",
+  "positioning": "Technical professional",
+  "location": "Your location",
+  "availability": "Discuss during application",
+  "remoteWork": "preferred",
+  "education": { "degree": "Your verified degree", "completedYear": 2025, "provisionalCertificateAvailable": false },
+  "capabilities": ["Add only skills you can defend in an interview"],
+  "projects": [{ "name": "Verified project", "evidence": ["Add a factual, interview-defensible project statement"] }],
+  "experience": ["Add verified experience"],
+  "applicationFacts": {
+    "rag": "OWNER_INPUT_REQUIRED",
+    "automation": "OWNER_INPUT_REQUIRED",
+    "support": "OWNER_INPUT_REQUIRED",
+    "education": "OWNER_INPUT_REQUIRED"
+  },
+  "forbiddenClaims": ["invented experience", "invented qualifications", "invented metrics"]
+}

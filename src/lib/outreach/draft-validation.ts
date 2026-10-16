@@ -3,7 +3,6 @@ import { outreachDraftSchema, type OutreachDraft } from "@/schemas";
 
 const approvedClaims = new Set<string>(candidateProfile.projects.flatMap((project) => project.evidence));
 const forbiddenPatterns = [
-  /10\+\s+active\s+(?:decimal\s+os\s+)?users/i,
   /degree\s+(?:is\s+)?expected|degree\s+incomplete/i,
   /(?:paid\s+customers?|product\s+revenue|funding|awards?|certifications?)/i,
   /(?:advanced\s+)?(?:react|typescript)\s+(?:expert|expertise|advanced)/i,

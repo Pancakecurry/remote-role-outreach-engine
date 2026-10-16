@@ -1,13 +1,25 @@
 # Architecture
 
-Next.js provides a private CRM. The browser client uses only public Supabase configuration. The SSR client uses the publishable key plus Supabase Auth cookies, validates the user with `auth.getUser()`, and lets RLS decide all normal CRM reads/writes. The server-only admin client holds the secret key exclusively for named scripts and future trusted n8n automation; it is not used by CRM pages.
+The system is split into a private operational application and portable, credential-free workflow/configuration templates.
 
-Next 16 `proxy.ts` refreshes Supabase cookies on requests. Protected server routes validate the user again before rendering, so a cookie alone is never trusted. Every CRM row has an owner; future n8n inserts use `APP_OWNER_USER_ID` with the trusted server key.
+## Request and data boundaries
 
-n8n, Gemini, controlled public extraction, and Gmail remain future components. All fetched content will be untrusted input. Apollo was removed because the architecture uses public evidence rather than paid contact data.
+Next.js serves the owner-only CRM. Browser code uses the Supabase publishable key and authenticated cookies; protected routes validate the user and let row-level security enforce ownership. The Supabase secret key is restricted to server-only ingestion, scoring, packaging, and orchestration routes.
 
-Phase 2B-2 adds read-only owner/profile verification and guarded synthetic seed tooling. Browser reads continue through the authenticated SSR client and RLS; the admin client is limited to named verification and demo scripts. Future n8n automation will propagate `APP_OWNER_USER_ID`, never a browser-supplied owner value.
+Every CRM row is owner-scoped. n8n calls narrow internal endpoints with a shared Header Auth token and never supplies an owner ID from workflow data. Candidate facts and search priorities load from ignored local JSON files; tracked files contain neutral examples only.
 
-Phase 3 adds a server-only ingestion orchestrator. It reads enabled owner-scoped public ATS sources, calls only fixed provider origins, records source runs and workflow state, and writes canonical jobs through the admin boundary. The CRM continues to read with the authenticated SSR client and RLS. The future n8n template invokes a narrow internal route but remains inactive.
+## Pipeline
 
-The release candidate separates application, contact, drafting, and future-autosend thresholds. Gemini receives only bounded, untrusted job metadata plus approved profile facts. Official-page extraction validates public DNS, HTTPS, same-domain redirects, response size, and MX records without SMTP probing. Drafts are persisted as paused, non-sendable records; neither the browser nor n8n can claim a live message while dry-run and autosend-disabled settings hold.
+1. Configured Greenhouse, Lever, and Ashby adapters fetch bounded public responses from fixed HTTPS origins.
+2. Ingestion normalizes records, deduplicates by owner/source/role, updates source health and last-seen timestamps, and detects closures.
+3. Deterministic gates reject only hard blockers. Gemini receives bounded job text and verified profile facts for structured fit assessment.
+4. Ranking combines fit, role family, geography, compensation, freshness, experience, quality, competition, friction, employment potential, and mission usefulness.
+5. Strong roles receive an idempotent application package and one selected owner-approved résumé.
+6. Public-contact extraction records provenance and validation. Drafts remain non-sendable unless every evidence and safety gate passes.
+7. n8n schedules acquisition, operations, summary, inbox, delivery, and follow-up branches. Environment and database switches remain authoritative.
+
+## Safety model
+
+Job pages are untrusted input. Provider requests enforce host allowlists, redirects and response limits; company-page extraction additionally checks DNS and same-domain behavior. The system does not automate LinkedIn, infer email patterns, probe SMTP, bypass CAPTCHAs, or submit applications without confirmation.
+
+Dry-run mode, database settings, environment switches, idempotency keys, claim leases, suppression records, bounded send limits, and audit events provide defense in depth. Gmail credentials exist only in the operator's n8n instance.

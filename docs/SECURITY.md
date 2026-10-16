@@ -1,13 +1,11 @@
-# Security controls
+# Security model
 
-Secrets stay in ignored local files. The application agent never opens or prints `.env.local`; runtime preflights report only sanitized statuses. The secret-key client is marked server-only and is not imported by client components or normal CRM repositories.
+Secrets belong only in ignored runtime configuration. `.env.local`, private candidate profiles, résumé PDFs, generated application material, local databases, and activation notes must never be committed. Public examples must contain synthetic values.
 
-There is no public sign-up, social auth, reset flow, anonymous CRM access, or browser secret-key use. Protected routes use validated Supabase users, generic authentication failures, cookie refresh through `proxy.ts`, and RLS owner policies. Repository failures are sanitized before rendering.
+The browser uses only Supabase public configuration. Protected server routes validate the authenticated user and rely on row-level security. The Supabase secret key and internal automation token are server-only. n8n credentials are assigned in the operator's n8n instance; neither credential values nor local credential IDs belong in workflow JSON.
 
-Future fetching must enforce allowlists, redirect/size limits, and SSRF protections. LinkedIn scraping, guessed-email sending, SMTP probing, paid data brokers, and Gmail operations remain prohibited. Suppression, dry-run kill switch, rate limits, idempotency, and audit logs remain mandatory.
+Public ATS and company-page content is untrusted input. Fetching is limited to supported providers and validated HTTPS origins with bounded responses and sanitized errors. The project does not bypass CAPTCHAs, authentication, robots controls, or platform safeguards. LinkedIn automation, guessed-email sending, SMTP probing, and paid contact enrichment are outside the design.
 
-Demo scripts require a valid configured owner ID, `dry_run`, and disabled autosend. They operate only on explicitly marked synthetic records and cannot make a demo sequence live or autosend eligible. The owner completes authenticated browser QA without sharing credentials.
+Outreach is fail-closed: dry-run is the default, sends are rate-limited and idempotent, public evidence is required, and reply, bounce, rejection, opt-out, suppression, manual pause, or role closure cancels follow-ups. Application records cannot claim success without confirmation.
 
-ATS ingestion accepts only configured Greenhouse, Lever, and Ashby identifiers, fixed HTTPS origins, GET requests, bounded JSON responses, and sanitized errors. It follows no redirects to arbitrary hosts and never posts to ATS application endpoints. Provider HTML is converted to inert text; raw payloads and applicant data are not retained. The internal orchestration route uses a constant-time token comparison when configured.
-
-The release candidate keeps all claimed messages at zero while `OUTREACH_MODE=dry_run` or autosend is disabled. Draft creation requires stored public evidence, matching professional domain, MX presence, and approved factual claims. Gmail identifiers are never created by draft generation, and imported n8n templates are inactive with credential assignment left to the owner.
+Before publishing a release, verify tracked files, the full Git history, workflow credential blocks, and generated artifacts for secrets or personal data. Follow the commands in [the operations runbook](OPERATIONS_RUNBOOK.md).
